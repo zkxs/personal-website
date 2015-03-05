@@ -1,0 +1,5 @@
+Options -Indexes
+
+AddType text/html .jpg
+AddType text/plain .sh
+AddOutputFilter INCLUDES .jpg

@@ -1,0 +1,330 @@
+/* HTML5 compatibility in older browsers
+ * IE 8 and earlier are especially dumb and cannot apply CSS to unknown elements
+ * making html5shiv.js required
+ */
+header, section, footer, aside, nav.sidebar, main, article, figure
+{
+	display: block;
+}
+
+/* Prevent browsers from making the <author> tag look special */
+address {
+	font-style: normal;
+	font-variant: normal;
+	text-decoration: none;
+}
+
+hr {
+	color: #888888;
+}
+
+p {
+    
+}
+
+mark {
+	color: #FFFFFF;
+	background-color: #3399FF;
+}
+
+a {
+    -webkit-transition: text-decoration 0.3s; /* Safari */
+	transition: text-decoration 0.3s;
+}
+
+a:link, a:visited {
+	color: #00A5EC;
+	text-decoration: none;
+}
+
+a:hover, a:active {
+	text-decoration: underline;
+}
+
+a:active {
+	color: #00FF40;
+}
+
+html {
+	/* Make different browsers consistent with my worldview */
+	height: 100%;
+}
+
+body {
+    background-color: #000000;
+	/* background-image: url("/img/background.png");
+	background-repeat: repeat;
+	background-attachment: fixed; */ /* Background should no longer be visible, so don't load an image */
+	
+	color: #D4D4D4; /* Default text color */
+	font-family: Arial, Helvetica, sans-serif;
+	text-shadow: 0px 0px 2px rgba(212,212,212,0.4);
+	
+	/* Make different browsers consistent with my worldview */
+	margin: 0;
+    padding: 0;
+	height: 100%;
+}
+
+/* contains the entire document */
+div#container {
+	width: 100%;
+	height: 100%;
+	display: table;
+	border-collapse: collapse;
+	background-color: #000000;
+	padding: 0px;
+	margin: 0px;
+}
+
+/* BEGIN CLEARFIX */
+/* Purposely does not support IE 6,7 */
+div#container:after {
+	content:"";
+	display:table;
+	clear:both;
+}
+/* END CLEARFIX */
+
+header {
+	z-index: 1;
+	background-color: inherit;
+	margin: 0px;
+	padding-top: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #3B3B3B;
+	
+	/* div.container has a bottom margin of 10px, in case there is no footer.
+	 * Thusly, if there IS a footer, it needs to overlap this margin so tha
+	 * the sidebar renders with a footer properly.
+	 */
+	/* position: relative;
+	top: -10px;
+	padding-top: 10px; */
+}
+
+header > h1 {
+	text-align: center;
+	margin: 0px;
+	color: #EEEEEE;;
+}
+
+nav.sidebar { /* totalwidth=170px */
+	margin: 0px;
+	margin-top: 20px;
+	margin-right: 10px;
+	width: 160px;
+	/* padding-top: 60px; */
+	height: 100%; /* TODO: How to make it fill? */
+	float: left; /* Outdated now that it uses fixed position */
+	/* position: fixed; */
+	/* top: 0px; */
+	/* background-color: #FFFFFF; */
+	z-index: 0;
+	/* text-transform: uppercase; */
+}
+
+/* No nav list should have bullets */
+nav ul {
+	list-style: none;
+}
+
+/* padding for the sidebar is not handled in the <ul> element */
+nav.sidebar ul {
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+}
+
+/* sidebar headers */
+nav.sidebar ul > li > h1
+{
+	text-align: center;
+	margin: 0px;
+	font-size: 24px;
+	margin-right:10px;
+}
+
+/* sidebar links item */
+nav.sidebar ul > li > a {
+	display: block;
+	font-size: 16px;
+	text-decoration: none;
+	color: #36D900;
+	background-color: #222222;
+	padding-left: 10px;
+	height: 30px;
+	width: 140px;
+	-webkit-transition: padding-right 0.3s; /* Safari */
+	transition: padding-right 0.3s;
+	/* -webkit-transition: color 0.3s; */ /* Safari */
+	/* transition: color 0.3s; */
+	line-height: 30px;
+	vertical-align:middle; /* valign center text */
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+	border-right: 2px solid black;
+	border-top: 2px solid black;
+	overflow: hidden;
+}
+/* last sidebar link item */
+nav.sidebar ul > li> a:last-child {
+	border-bottom: 2px solid black;
+}
+
+/* sidebar link actives */
+nav.sidebar ul > li > a:active {
+	color: #FF0000;
+}
+
+/* sidebar link hover */
+nav.sidebar ul > li > a:hover {
+	background-color: #444444;
+	padding-right: 10px;
+}
+
+/* sidebarAd */
+div.sidebarNotSubtractContainer,
+div.sidebarAd {
+	margin: 0px;
+	width: 160px;
+	height: 600px;
+	float: left;
+	z-index: 0;
+}
+
+div.sidebarAd {
+	background-color: black;
+}
+
+div.sidebarNotSubtractContainer
+{
+	margin-top: 10px;
+	background-image: url("/img/adblock-dim00-indexed-10colors.png");
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+}
+
+main { /* total width needs to be 100% - sidebar.totalwith == 100% - 170px*2 */
+	width: 900px; /* For shitty/old browsers */
+	width: calc(100% - 360px); /* 10px + 10px of margins, therefore 100% - 20px - 170px */
+	height: 100%;
+	float: left;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+/* main.hasSideBar {
+	margin-left: 160px; /* Normally 10px *//*
+} */
+
+/* The footer element's children must start and end with block elements so that
+ * their margins can be finagled with
+ */
+footer {
+	font-style: italic;
+	background-color: inherit;
+	z-index: 1;
+	text-align: center;
+	clear: both;
+	margin: 0px;
+	display: table-row;
+	vertical-align: bottom;
+	height: 1px;
+	color: #737373;
+	font-size: 0.8em;
+	
+	/* div.container has a bottom margin of 0px, in case there is no footer.
+	 * Thusly, if there IS a footer, it needs to overlap this margin so tha
+	 * the sidebar renders with a footer properly.
+	 */
+	/* position: relative;
+	bottom: 0px; */
+}
+
+/* hack to fix the use of CSS display:table to stick the footer to the bottom
+ * of its container
+ */
+footer > *:first-child {
+	margin-top: 40px;
+}
+footer > *:last-child {
+	margin-bottom: 20px;
+}
+
+footer > * {
+
+}
+
+footer div.line {
+	height:      1.5em;
+	line-height: 1.5em;
+}
+
+footer div.line > * {
+	display: inline;
+	vertical-align: middle;
+	line-height: normal; 
+}
+
+footer span.divider {
+	height: 1.5em;
+	margin-left:   20px;
+	padding-right: 20px;
+	border-left: 2px solid #5A5A5A;
+	display: inline-block;
+	/* display: inline-block;
+	vertical-align: middle;
+	line-height: normal;  */
+}
+
+footer a:link,
+footer a:visited {
+	color: #3C89B0;
+}
+
+/* Link to validate this web page */
+.validateLink {
+	
+}
+
+/* Center non-textual elements */
+.centered {
+	display: block;
+	margin-left: auto;
+	margin-right: auto; 
+}
+
+/* AdBlock text */
+div.adBlockDiv {
+	border: 5px solid red;
+	border-radius: 15px;
+	vertical-align: middle;
+}
+span.adBlockFrown,
+span.adBlockText {
+	float: left;
+	min-width: 140px;
+	min-height: 50%;
+	text-align: center;
+	padding: 10px;
+}
+span.adBlockFrown{
+	font-size: 90px;
+	letter-spacing: -12px;
+}
+span.adBlockFrown:after{
+	content: ":(";
+}
+span.adBlockText {
+	font-size: 24px;
+}
+span.adBlockText:after {
+	content: "You seem to be using AdBlock";
+}

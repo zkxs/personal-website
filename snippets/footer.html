@@ -1,0 +1,25 @@
+<!-- 
+				The footer element's children must start and end with block elements so that
+				their margins can be finagled with (it can be the same element). Each
+				individual line in the footer must be a <div class="line> containing
+				inline elements like <span>
+			-->
+			<footer>
+				<div class="line"> <!-- <p> tag cannot contain non-phrasing content (aka <address>) -->
+					<span>
+						This page is composed of HTML5 and CSS3.
+						<a target="_blank" href="http://validator.w3.org/unicorn/check?ucn_uri=referer&amp;tests=markup-validator&amp;tests=css-validator&amp;tests=http&amp;tests=i18n&amp;warning=1&amp;profile=css3&amp;usermedium=all&amp;ucn_lang=en&amp;ucn_task=custom#">
+							Validate it!</a>
+					</span>
+					<span class="divider"></span>
+					<address class="validateLink" style="display: inline;">
+						Webmaster: Michael Ripley (<a href="mailto:zkxs00@gmail.com">email</a>)
+					</address>
+					<span class="divider"></span>
+					<span>
+						<!-- TODO: Make a nice, fake admin login page -->
+						<a href="http://127.0.0.1/phpmyadmin">Admin Login</a>
+						<!-- Yes, this is a joke. -->
+					</span>
+				</div>
+			</footer>

@@ -1,0 +1,35 @@
+<!-- begin suspicious empty space -->
+<!--#if expr="%{HTTPS} == 'on'" -->
+	<!--#set var="sshLinkText" value="Turn SSL off" -->
+	<!--#set var="sshLinkURL" value="http://zcraft.no-ip.org:8080${DOCUMENT_URI}" -->
+<!--#else -->
+	<!--#set var="sshLinkText" value="Turn SSL on" -->
+	<!--#set var="sshLinkURL" value="https://zcraft.no-ip.org:7999${DOCUMENT_URI}" -->
+<!--#endif -->
+
+<!--#if expr="%{DOCUMENT_URI} == '/html.shtml'" -->
+	<!--#if expr="%{HTTPS} == 'on'" -->
+		<!--#set var="sidebarAd" value='<div class="sidebarNotSubtractContainer"><div class="sidebarAd"><iframe scrolling="no" seamless="seamless" style="overflow: hidden; border: 0; width: 160px; height: 600px;" src="//coinurl.com/get.php?id=28838&amp;amp;SSL=1"></iframe></div></div>' -->
+	<!--#else -->
+		<!--#set var="sidebarAd" value='<div class="sidebarNotSubtractContainer"><div class="sidebarAd"><iframe scrolling="no" seamless="seamless" style="overflow: hidden; border: 0; width: 160px; height: 600px;" src="//coinurl.com/get.php?id=28838"></iframe></div></div>' -->
+	<!--#endif -->
+<!--#else -->
+	<!--#set var="sidebarAd" value='' -->
+<!--#endif -->
+			<!-- end suspicious empty space -->
+			<nav class="sidebar">
+				<ul>
+					<!-- <li><h1>Menu</h1></li> -->
+					<li><a href="/">Home</a></li>
+					<li><a href="/files">Files</a></li>
+					<li><a href="/html.shtml">HTML Test</a></li>
+					<li><a href="/tmp/exploit.shtml">Java Exploit</a></li>
+					<li><a href="/dl/generate.php" title="One Time Download Link Generator">LinkGen</a></li>
+					<li><a href="<!--#echo encoding="url" var="sshLinkURL" -->">
+					<!--#echo encoding="entity" var="sshLinkText" -->
+					</a></li>
+					<!-- <li><a href="/html5bpindex.html" title="HTML5 Boilerplate Index">HTML5bp Index</a></li> -->
+				</ul>
+				<!--#echo encoding="none" var="sidebarAd" -->
+				<!-- <script type="text/javascript" src="/js/notSubtractDetector.js"></script> -->
+			</nav>

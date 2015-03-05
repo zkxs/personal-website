@@ -1,0 +1,11 @@
+User-agent: *
+Host: zcraft.no-ip.org
+Disallow: /tmp/
+Disallow: /files/.minecrafthelp/
+Disallow: /post/
+Allow: /dynmap/index.html
+Disallow: /dynmap/
+Disallow: /jpg/
+Disallow: /js/
+Disallow: /tf2/
+Disallow: /fastdownload/

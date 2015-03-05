@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="a list of Apache's mod_include environment variables" />
+		<meta name="keywords" content="michael,ripley,ssi,apache,mod_include,environment,variables" />
+		<meta name="author" content="Michael Ripley" />
+		<title>Apache mod_include Environment Variables</title>
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<!--[if lt IE 9]>
+			<script src="/js/html5shiv.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div id="container">
+			<header><h1>Apache mod_include Environment Variables</h1></header>
+			<!--#include virtual="/snippets/navbar.shtml" --> 
+			<main class="hasSideBar">
+				<!--#printenv --> 
+			</main>
+			<!--#include virtual="/snippets/footer.html" -->
+		</div>
+		<!--#include virtual="/snippets/piwik.html" -->
+	</body>
+</html>

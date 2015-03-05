@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="An ordinary JPEG image...?" />
+		<meta name="keywords" content="jpg,image,lol,trolled,rickrolled" />
+		<meta name="author" content="Michael Ripley" />
+		<title>Rickrolled</title>
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<!--[if lt IE 9]>
+			<script src="/js/html5shiv.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div id="container">
+			<header>
+				<a id="top"></a>
+				<h1>Rickrolled</h1>
+			</header>
+			<!--#include virtual="/snippets/navbar.shtml" --> 
+			<main class="hasSideBar">
+				<iframe
+					src="http://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+					allowfullscreen="allowfullscreen"
+					style="width: 640px; height: 480px; border-style:none"
+				>
+						IFrame did not load.
+				</iframe>
+			</main>
+			<!--#include virtual="/snippets/footer.html" --> 
+		</div>
+	</body>
+</html>

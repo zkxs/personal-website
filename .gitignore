@@ -1,0 +1,29 @@
+# Folders that aren't really part of the site
+/analytics*
+/bugzilla*
+/dynmap
+/fastdownload/**/*.bsp
+/fastdownload/**/*.rar
+/fastdownload/**/*.nav
+/wayne
+/will
+
+# Files that contain sensitive information
+.htpasswd
+.htgroups
+/post/post.log
+*.secret
+
+# Hosted binary files
+/files/*
+!/files/.htaccess
+/img/will/*.*
+/dl/files/*
+
+# /tmp is whitelist only
+/tmp/*
+!/tmp/cookie.php
+!/tmp/Exploit.jar
+!/tmp/exploit.shtml
+!/tmp/.htaccess
+!/tmp/test.php

@@ -1,0 +1,29 @@
+Options +Indexes
+AddDescription "Silly menu for an imaginary restaurant" 8BitFood.jar
+AddDescription "The best Minecraft texture pack. Ever. Now extremely outdated." BESTPACK-1.1.zip
+AddDescription "TI Calculator files" calc
+AddDescription "A game about cells. Features an AI." CELLULAR_AUTOMATA.jar
+AddDescription "Random people who connected to my Minecraft server" ddos.txt
+AddDescription "Modifies the javascript screen variables to reduce browser fingerprintability" Fingerprint_Spoofer.user.js
+AddDescription "Attempts to resolve internet problems" fixinternet.bat
+AddDescription "Resets Windows' sound service" fixsound.bat
+AddDescription "Mods I've applied to my FTB server" FTB MichaelPatch.zip
+AddDescription "Games by me" games
+AddDescription "Java applications by me" java
+AddDescription "Because jars are so freaking hard to make" makejar.bat
+AddDescription "The source for my TI-84 mandelbrot-set grapher" MANDELBRO.8xp.txt
+AddDescription "Mods I've applied to my FTB server" mc mods.zip
+AddDescription "A linux init script for Minecraft. I've added new features since this was uploaded (ramdisk stuff). Bug me if you want em." minecraft.init
+AddDescription "JRE arguments to make minecraft happy" minecraft_launch_options.txt
+AddDescription "Consult the readme." OneManShort.jar
+AddDescription "Readme for the scene animation project" OneManShort.readme.txt
+AddDescription "Authorized users only" private
+AddDescription "These are my public keys." publickeys
+AddDescription "Fixes out of date icons in Windows' shell" Rebuild_Icon_Cache.bat
+AddDescription "Allows you to drive a sphero with an Xbox controller. Extremely outdated" sphero.jar
+AddDescription "Generates a CSV file containing how many times you've played each TF2 map" TF2viewed.jar
+AddDescription "A useful soundclip to have for all occasions!" twilight_zone.mp3
+AddDescription "GreaseMonkey user scripts of my own creation" userscripts
+#AddType text/plain .bat
+AddType text/plain .init
+AddType text/plain .java

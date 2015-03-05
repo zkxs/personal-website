@@ -1,0 +1,6 @@
+##  Disables indexing directories
+Options -Indexes
+AddType text/plain .bat
+AddType text/plain .java
+AddType text/plain .yml
+AddType text/plain .sh

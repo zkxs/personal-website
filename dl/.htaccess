@@ -1,0 +1,11 @@
+XSendFile on
+SetEnv no-gzip dont-vary
+
+<Files generate.php>
+  AuthType Basic
+  
+  AuthName "Rawr keep out!"
+  AuthUserFile /var/www/.htpasswd
+  AuthGroupFile /var/www/.htgroups
+  Require group admins
+</Files>

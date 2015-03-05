@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="A page where I test out various HTML things" />
+		<meta name="keywords" content="HTML,test,page,michael" />
+		<meta name="author" content="Michael Ripley" />
+		<title>HTML Test Page</title>
+		
+		<!-- the <base> tag sets default relative link location and target attribute stuff -->
+
+		<!-- Refresh document every 30 seconds: -->
+		<!-- <meta http-equiv="refresh" content="30"> -->
+		
+		<!-- <script> defines a client side script -->
+		
+		<!-- the <link> tag is used to reference external resources, such as CSS stylesheets -->
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		
+		<style>
+			div.shenanigans {
+				width: 320px;
+				height: 457px;
+				display: block;
+				background-image: url('/img/blasé.gif');
+			}
+			div.shenanigans:hover {
+				background-image: url('/img/fancymichael-comical-animation.gif');
+			}
+		</style>
+		
+		<!--[if lt IE 9]>
+			<script src="/js/html5shiv.min.js"></script>
+		<![endif]-->
+		
+		<!-- Using a display: none <div> instead -->
+		<!-- <link rel="prefetch" href="/img/fancymichael-comical-animation.gif" /> -->
+	</head>
+	<body>
+		<div id="container">
+			<header>
+				<a id="top"></a>
+				<h1>HTML Test Page</h1>
+			</header>
+			<!--#include virtual="/snippets/navbar.shtml" -->
+			<main class="hasSideBar">
+				<h1>Heading 1</h1> <!-- h1 is the minimum -->
+				<h2>Heading 2</h2>
+				<h3>Heading 3</h3>
+				<h4>Heading 4</h4>
+				<h5>Heading 5</h5>
+				<h6>Heading 6</h6> <!-- h6 is the maximum -->
+				
+				<p>This is a paragraph.</p>
+				<p>Another paragraph.</p>
+				<p>Sometimes you may want to have a line break within one paragraph. <br /> This is an example of the line break technique.</p>
+				<!-- Note how spaces before and after the <br /> tag are ignored -->
+				
+				<!-- For IE 9 and earlier versions, an image-link will show a border around the image. To remove the border around the image, add style="border:0;" -->
+				
+				<figure>
+					<a href="./html.shtml" target="_top">
+						<img
+							style="border:0;"
+							class="centered"
+							src="/img/apng-die.png"
+							alt="Animated spinning die"
+							title="Break out of a frame" />
+					</a>
+					<figcaption style="text-align: center;">
+						An <a href="https://en.wikipedia.org/wiki/APNG">APNG</a> image.<br />
+						Some browsers don't animate it.
+					</figcaption>
+				</figure>
+				
+				<h2>Shenanigans: Do not mouse over!</h2>
+				<div class="shenanigans"></div>
+				
+				<h2>Formatting</h2>
+				<p>
+					<b>bold text</b>,
+					<strong>important text</strong>,
+					<i>itallic text</i>,
+					<em>emphasized text</em>,
+					<small>small text</small>,
+					<sub>subscripted text</sub>,
+					<sup>superscripted text</sup>,
+					<ins>inserted text</ins>,
+					<del>deleted text</del>,
+					<mark>marked/highlighted text</mark>,
+					<code>computer code</code>,
+					<kbd>keyboard text</kbd>,
+					<samp>sample computer code</samp>,
+					<var>a variable</var>,
+					<abbr>an abbreviation or acronym</abbr>,
+					<q>an inline (short) quotation</q>,
+					<cite>the title of a work</cite>,
+					<dfn>a definition term</dfn>
+				</p>
+				<pre>preformatted text</pre>
+				<address>contact information for the author/owner of a document</address>
+				<!--<bdo dir="">the text direction</bdo>,-->
+				<blockquote>a section that is quoted from another source</blockquote>
+				
+				<!--[if IE 8]>
+					<p>your browser is awful</p>
+					<p>Conditional tags can be used to render html for IE only</p>
+				<![endif]-->
+				<p>
+					&lt;b&gt; and &lt;i&gt; are the standard tags.
+					&lt;strong&gt; and &lt;em&gt; are older and may not always render
+					the same on different browsers. Mostly they just mean bold and
+					itallic though.
+				</p>
+				
+				<a href="#top">Back to top</a>
+			</main>
+			<!--#include virtual="/snippets/footer.html" -->
+		</div>
+		<div id="preload" style="display: none;">
+			<img src="/img/fancymichael-comical-animation.gif" alt="Preload mouseover image" />
+		</div>
+		<!--#include virtual="/snippets/piwik.html" -->
+	</body>
+</html>

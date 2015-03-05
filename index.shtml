@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Michael Ripley's homepage" />
+		<meta name="keywords" content="michael,ripley,home" />
+		<meta name="author" content="Michael Ripley" />
+		<title>Snazzy Landing Page</title>
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<!--[if lt IE 9]>
+			<script src="/js/html5shiv.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div id="container">
+			<header><h1>Snazzy Landing Page</h1></header>
+			<!--#include virtual="/snippets/navbar.shtml" -->
+			<main class="hasSideBar">
+				<nav>
+					<h2>Links:</h2>
+					<ul>
+						<li>Miscellaneous Shenanigans
+							<ul>
+								<li><a href="files">Some random files</a></li>
+								<li><a href="jpg/epic-avatar.jpg">This is a .jpg file</a></li>
+								<li><a href="tmp/exploit.shtml">An example of a Java exploit</a></li>
+								<li><a href="http://minkcv.itch.io/triangulis">Will Smith's Triangular Tetris</a></li>
+								<li><a href="https://129.244.101.210/self_registration">TU's hard to find MAC address registration</a> (<a href="https://selfreg.utulsa.edu/self_registration">Domain name?</a>)</li>
+							</ul>
+						</li>
+						<li>Development
+							<ul>
+								<li><a href="bugzilla">Bugzilla Issue Tracker</a> (<a href="https://zcraft.no-ip.org:7999/bugzilla/">secure</a>)</li>
+								<li><a href="html.shtml">HTML Test Page</a></li>
+								<li><a href="printenv.shtml">mod_include Environment Variables</a></li>
+							</ul>
+						</li>
+						<li>Gaming
+							<ul>
+								<li><a href="mumble://zcraft.no-ip.org:64738/?version=1.2.6">Mumble Voice Chat</a> (<a href="http://mumble.sourceforge.net">Get Mumble</a>)</li>
+								<li><a href="steam://connect/zkxs.no-ip.org:27015">My TF2 Server</a>&nbsp;(Currently down)</li>
+								<li><a href="steam://connect/zkxs.no-ip.org:27016">Alternate Source Server</a></li>
+								<li><a href="steam://open/console">Steam Console</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</main>
+			<!--#include virtual="/snippets/footer.html" -->
+		</div>
+		<!--#include virtual="/snippets/piwik.html" -->
+	</body>
+</html>
