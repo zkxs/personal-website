@@ -11,13 +11,16 @@
 	$filepathlocal = random_pic($_SERVER['DOCUMENT_ROOT'].'/img/will');
 	$filepath = str_replace($_SERVER['DOCUMENT_ROOT'], "", $filepathlocal);
 	$filename = preg_replace("/.*\//", "", $filepath);
-	$filenamejpg = preg_replace("/\.[a-zA-Z0-9]{1,4}$/", ".jpg", $filename);
+	$filenamenoext = preg_replace("/\.[a-zA-Z0-9]{1,4}$/", "", $filename);
 	$fileext = preg_replace("/^.*\.([a-zA-Z0-9]{1,4})$/", "$1", $filename);
-	$filenamejpg = strtoupper($filenamejpg);
+	$filenamenoext = strtoupper($filenamenoext);
 	$imagesize = getimagesize($filepathlocal);
 	$mimetype = $imagesize["mime"];
 	$width = $imagesize[0];
 	$height = $imagesize[1];
+	
+	$extensions = array("jpg", "rar", "flac", "pdf", "txt", "ppt", "html", "ttf", "exe", "wmv");
+	$randomextension = strtoupper($extensions[array_rand($extensions)]);
 	
 	// upscale small swfs
 	$desiredwidth = 840;
@@ -68,7 +71,7 @@
 			<header><h1>WILL THIS IS FOR YOU</h1></header>
 			<?php include $_SERVER['DOCUMENT_ROOT'].'/snippets/navbar.php'; ?>
 			<main class="hasSideBar">
-				<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileext?>"><?=$filenamejpg?></h2>
+				<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileext?>"><?=$filenamenoext?>.<?=$randomextension?></h2>
 				<object
 					class="centered"
 					style="border: 1px solid black; background-color:#FF0000;"
