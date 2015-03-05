@@ -19,6 +19,35 @@ There are a few files that I'm specifically not tracking to their sensitive cont
 Also note the sql login information used in the /dl/*.php scripts is loaded from an external, untracked file. 
 Due to this the site cannot simply be dropped in and expected to work completely.
 
+## Webserver Requirements
+In addition to PHP, my Apache setup has the following modules. I'm not sure if all of them are being used.
+* core
+* so
+* watchdog
+* http
+* logio
+* version
+* unixd
+* alias
+* autoindex
+* cgi ?
+* deflate
+* dir
+* env
+* expires
+* filter
+* headers
+* include
+* mime
+* negotiation
+* perl ?
+* reqtimeout
+* rewrite
+* setenvif
+* ssl
+* status
+* substitute
+* xsendfile
 
 ## Attribution of other's work
 * [HTML5 Boilerplate](https://html5boilerplate.com/)
