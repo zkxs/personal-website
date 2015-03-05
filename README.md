@@ -18,3 +18,9 @@ version control. What you see here is the code I've written/collected for the pa
 There are a few files that I'm specifically not tracking to their sensitive content, namely /.htpasswd and /.htgroups. 
 Also note the sql login information used in the /dl/*.php scripts is loaded from an external, untracked file. 
 Due to this the site cannot simply be dropped in and expected to work completely.
+
+
+## Attribution of other's work
+* [HTML5 Boilerplate](https://html5boilerplate.com/)
+* [Jacob Wyke's code from one of his blog posts as the basis of the /dl/*.php files](http://www.webvamp.co.uk/blog/coding/creating-one-time-download-links/)
+* [Stuart Langridge's code for the sorting of table columns.](http://www.kryogenix.org/code/browser/sorttable/)
