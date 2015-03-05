@@ -19,6 +19,7 @@
 !/files/.htaccess
 /img/will/*.*
 /dl/files/*
+!/dl/files/.htaccess
 
 # /tmp is whitelist only
 /tmp/*

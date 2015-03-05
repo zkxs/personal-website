@@ -1,0 +1,9 @@
+AuthType Basic
+
+AuthName "Rawr keep out!"
+AuthUserFile /var/www/.htpasswd
+AuthGroupFile /var/www/.htgroups
+Require group admins
+
+
+Options +Indexes
