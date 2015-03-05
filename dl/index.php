@@ -30,15 +30,6 @@ if(!empty($_GET['key'])){
 				$strDownload = $strDownloadFolder.$arrCheck['file'];
 				
 				if(file_exists($strDownload)){
-					// get the file content 
-					//$strFile = file_get_contents($strDownload);
-					
-					// set the headers to force a download
-					//header("Content-Disposition: attachment; filename=\"".$arrCheck['file']."\"");
-					//header("Content-Length: ". filesize($strDownload));
-					//header("Accept-Ranges: bytes");
-					//header("Content-type: application/force-download");
-					//header("Content-Disposition: attachment; filename=\"".str_replace(" ", "_", $arrCheck['file'])."\"");
 					
 					// use X-Sendfile because it's way easier than hacky PHP shenanigans
 					header("X-Sendfile: " . $strDownload);

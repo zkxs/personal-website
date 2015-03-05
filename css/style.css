@@ -52,9 +52,6 @@ html {
 
 body {
     background-color: #000000;
-	/* background-image: url("/img/background.png");
-	background-repeat: repeat;
-	background-attachment: fixed; */ /* Background should no longer be visible, so don't load an image */
 	
 	color: #D4D4D4; /* Default text color */
 	font-family: Arial, Helvetica, sans-serif;
@@ -97,14 +94,6 @@ header {
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
 	border-bottom-color: #3B3B3B;
-	
-	/* div.container has a bottom margin of 10px, in case there is no footer.
-	 * Thusly, if there IS a footer, it needs to overlap this margin so tha
-	 * the sidebar renders with a footer properly.
-	 */
-	/* position: relative;
-	top: -10px;
-	padding-top: 10px; */
 }
 
 header > h1 {
@@ -118,14 +107,9 @@ nav.sidebar { /* totalwidth=170px */
 	margin-top: 20px;
 	margin-right: 10px;
 	width: 160px;
-	/* padding-top: 60px; */
-	height: 100%; /* TODO: How to make it fill? */
-	float: left; /* Outdated now that it uses fixed position */
-	/* position: fixed; */
-	/* top: 0px; */
-	/* background-color: #FFFFFF; */
+	height: 100%;
+	float: left;
 	z-index: 0;
-	/* text-transform: uppercase; */
 }
 
 /* No nav list should have bullets */
@@ -161,8 +145,6 @@ nav.sidebar ul > li > a {
 	width: 140px;
 	-webkit-transition: padding-right 0.3s; /* Safari */
 	transition: padding-right 0.3s;
-	/* -webkit-transition: color 0.3s; */ /* Safari */
-	/* transition: color 0.3s; */
 	line-height: 30px;
 	vertical-align:middle; /* valign center text */
 	border-top-right-radius: 15px;
@@ -211,7 +193,7 @@ div.sidebarNotSubtractContainer
 
 main { /* total width needs to be 100% - sidebar.totalwith == 100% - 170px*2 */
 	width: 900px; /* For shitty/old browsers */
-	width: calc(100% - 360px); /* 10px + 10px of margins, therefore 100% - 20px - 170px */
+	width: calc(100% - 360px); /* 10px + 10px of margins, therefore 100% - 20px - 340px */
 	height: 100%;
 	float: left;
 	margin-top: 20px;
@@ -220,9 +202,9 @@ main { /* total width needs to be 100% - sidebar.totalwith == 100% - 170px*2 */
 	margin-right: 10px;
 }
 
-/* main.hasSideBar {
-	margin-left: 160px; /* Normally 10px *//*
-} */
+main.hasSideBar {
+	/* Do nothing for now */
+}
 
 /* The footer element's children must start and end with block elements so that
  * their margins can be finagled with
@@ -239,13 +221,6 @@ footer {
 	height: 1px;
 	color: #737373;
 	font-size: 0.8em;
-	
-	/* div.container has a bottom margin of 0px, in case there is no footer.
-	 * Thusly, if there IS a footer, it needs to overlap this margin so tha
-	 * the sidebar renders with a footer properly.
-	 */
-	/* position: relative;
-	bottom: 0px; */
 }
 
 /* hack to fix the use of CSS display:table to stick the footer to the bottom
@@ -256,11 +231,7 @@ footer > *:first-child {
 }
 footer > *:last-child {
 	margin-bottom: 20px;
-}
-
-footer > * {
-
-}
+} /* end hack */
 
 footer div.line {
 	height:      1.5em;
@@ -279,9 +250,6 @@ footer span.divider {
 	padding-right: 20px;
 	border-left: 2px solid #5A5A5A;
 	display: inline-block;
-	/* display: inline-block;
-	vertical-align: middle;
-	line-height: normal;  */
 }
 
 footer a:link,
