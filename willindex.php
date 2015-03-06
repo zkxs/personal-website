@@ -61,12 +61,13 @@
 				var time = parseFloat($('#randomSWF').attr('time')); // time in seconds 
 				if (time > 10)
 				{
-					console.log("Refresh queued in " + time + " seconds");
 					setTimeout(refreshSwf, Math.floor(1000 * parseFloat(time)));
+					console.log("Refresh queued in " + time + " seconds");
 				}
 				else
 				{
-					console.log("This object is too short, so ne refresh was queued");
+					setTimeout(refreshSwf, 60000);
+					console.log("Refresh queued in 60 seconds (object loops)");
 				}
 			}
 			queueRefresh();
