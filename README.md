@@ -53,3 +53,4 @@ In addition to PHP, my Apache setup has the following modules. I'm not sure if a
 * [HTML5 Boilerplate](https://html5boilerplate.com/)
 * [Jacob Wyke's code from one of his blog posts as the basis of the /dl/*.php files](http://www.webvamp.co.uk/blog/coding/creating-one-time-download-links/)
 * [Stuart Langridge's code for the sorting of table columns.](http://www.kryogenix.org/code/browser/sorttable/)
+* [Carlos Falo Hervás' PHP library for reading SWF file headers](http://www.phpclasses.org/package/1653-PHP-Parse-header-of-Flash-files-to-extract-metadata.html)
