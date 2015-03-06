@@ -49,8 +49,7 @@
 		$width =  (int) ($width  * $mult);
 		$height = (int) ($height * $mult);
 	}
-?>
-					<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><?=$filenameNoExt?>.<?=$randomExtension?></h2>
+?>					<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><?=$filenameNoExt?>.<?=$randomExtension?></h2>
 					<object
 						id="randomSWF"
 						time="<?=$swfLength?>"
@@ -62,12 +61,3 @@
 						height="<?=$height?>">
 						Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
 					</object>
-
-					<pre id="test">
-<?php
-					print_r($imageSize);
-					echo "\n";
-					echo $swfLength . "\n";
-					echo "\n";
-				?>
-					</pre>

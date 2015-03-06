@@ -1,13 +1,4 @@
-<nav class="sidebar">
-				<ul>
-					<!-- <li><h1>Menu</h1></li> -->
-					<li><a href="/">Home</a></li>
-					<li><a href="/files">Files</a></li>
-					<li><a href="/html.shtml">HTML Test</a></li>
-					<li><a href="/tmp/exploit.shtml">Java Exploit</a></li>
-					<li><a href="/dl/generate.php" title="One Time Download Link Generator">LinkGen</a></li>
-					
-					<?php
+<?php
 					$https = FALSE;
 					if ( array_key_exists("HTTPS", $_SERVER) )
 					{
@@ -27,12 +18,16 @@
 						$text = "Turn SSL on";
 						$link = "https://zcraft.no-ip.org:7999" . $_SERVER['REQUEST_URI'];
 					}
-					?>
-					
-					
-					<li><a href="<?=$link ?>">
-						<?=$text ?>
-					</a></li>
+?>
+<nav class="sidebar">
+				<ul>
+					<!-- <li><h1>Menu</h1></li> -->
+					<li><a href="/">Home</a></li>
+					<li><a href="/files">Files</a></li>
+					<li><a href="/html.shtml">HTML Test</a></li>
+					<li><a href="/tmp/exploit.shtml">Java Exploit</a></li>
+					<li><a href="/dl/generate.php" title="One Time Download Link Generator">LinkGen</a></li>
+					<li><a href="<?=$link ?>"><?=$text ?></a></li>
 					<!-- <li><a href="/html5bpindex.html" title="HTML5 Boilerplate Index">HTML5bp Index</a></li> -->
 				</ul>
 			</nav>

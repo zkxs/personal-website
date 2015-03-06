@@ -36,8 +36,7 @@
 			<header><h1>WILL THIS IS FOR YOU</h1></header>
 			<?php include $_SERVER['DOCUMENT_ROOT'].'/snippets/navbar.php'; ?>
 			<main class="hasSideBar">
-				<div id="swfSlot">
-<?php include $_SERVER['DOCUMENT_ROOT'].'/php/randomwillswf.php'; ?>
+				<div id="swfSlot"><?php include $_SERVER['DOCUMENT_ROOT'].'/php/randomwillswf.php'; ?>
 				</div>
 				<div style="text-align: center; margin-top: 30px">
 					<span class="dim" style="position: relative; margin-left: auto; margin-right: auto">
@@ -46,9 +45,6 @@
 						<a style="position: relative; z-index: 2" class="dim" href="/index.shtml">here</a><!-- Extra sparkles to make the real link still underline on mouseover -->
 					</span>
 				</div>
-				
-				<a href="#" onclick="refreshSwf()">derp</a>
-				
 			</main>
 			<?php include $_SERVER['DOCUMENT_ROOT'].'/snippets/footer.html'; ?>
 		</div>
