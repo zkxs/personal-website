@@ -1,9 +1,5 @@
 <?php
 
-//echo "Hello World! ";
-//echo "Hello " . htmlspecialchars($_GET["name"]) . '!' ;
-//if (!is_null($_POST["key1"]))
-
 $ip = $_SERVER['REMOTE_ADDR'];
 $log = date('Y-m-d_H:i:s') . "\t\t" . $ip . "\t\t";
 
