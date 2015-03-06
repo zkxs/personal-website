@@ -1,5 +1,4 @@
 <?php
-	// lets keep all this PHP shit up at the top and just use inline vars in the actual HTML
 	require ("swfheader.class.php");
 	
 	function random_pic($dir)
@@ -8,6 +7,8 @@
 		$file = array_rand($files);
 		return $files[$file];
 	}
+	
+	$debugPrint = true;
 	
 	$filepathLocal = random_pic($_SERVER['DOCUMENT_ROOT'].'/img/will');
 	$filepath = str_replace($_SERVER['DOCUMENT_ROOT'], "", $filepathLocal);
@@ -61,3 +62,22 @@
 						height="<?=$height?>">
 						Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
 					</object>
+<pre id="swfDebug" style="display: none;">
+<?php
+	if ($debugPrint) {
+		echo '$filepath = ';
+		echo $filepath . "\n";
+		
+		echo '$imageSize = ';
+		print_r($imageSize);
+		
+		if ($fileExt == "swf") {
+			echo '$fileExt = ';
+			print_r($swf);
+		}
+		
+		echo '$swfLength = ';
+		echo $swfLength . "\n";
+	}
+?>
+</pre>
