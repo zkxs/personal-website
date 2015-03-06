@@ -28,3 +28,6 @@
 !/tmp/exploit.shtml
 !/tmp/.htaccess
 !/tmp/test.php
+!/tmp/phishing
+/tmp/phishing/*
+!/tmp/phishing/.htaccess
