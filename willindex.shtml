@@ -44,6 +44,12 @@
 						<a style="position: relative; z-index: 2" class="dim" href="/index.shtml">here</a><!-- Extra sparkles to make the real link still underline on mouseover -->
 					</span>
 				</div>
+				<p>
+					If something seems off, check the debug info in the Javascript console (Ctrl + Shift + J).
+					If something <i>is</i> off, tell me about it.
+					I know of at least one swf (ahahahaha.swf) where the swf length calculation comes out wrong.
+					All I can really do is remove the offending swfs.
+				</p>
 			</main>
 			<!--#include virtual="/snippets/footer.html" -->
 		</div>
