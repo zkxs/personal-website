@@ -1,39 +1,3 @@
-<?php
-	// lets keep all this PHP shit up at the top and just use inline vars in the actual HTML
-	
-	function random_pic($dir)
-	{
-		$files = glob($dir . '/*.*');
-		$file = array_rand($files);
-		return $files[$file];
-	}
-	
-	$filepathlocal = random_pic($_SERVER['DOCUMENT_ROOT'].'/img/will');
-	$filepath = str_replace($_SERVER['DOCUMENT_ROOT'], "", $filepathlocal);
-	$filename = preg_replace("/.*\//", "", $filepath);
-	$filenamenoext = preg_replace("/\.[a-zA-Z0-9]{1,4}$/", "", $filename);
-	$fileext = preg_replace("/^.*\.([a-zA-Z0-9]{1,4})$/", "$1", $filename);
-	$filenamenoext = strtoupper($filenamenoext);
-	$imagesize = getimagesize($filepathlocal);
-	$mimetype = $imagesize["mime"];
-	$width = $imagesize[0];
-	$height = $imagesize[1];
-	
-	$extensions = array("jpg", "rar", "flac", "pdf", "txt", "ppt", "html", "ttf", "exe", "wmv");
-	$randomextension = strtoupper($extensions[array_rand($extensions)]);
-	
-	// upscale small swfs
-	$desiredwidth = 840;
-	$desiredheight = 480;
-	if ($width < $desiredwidth && $height < $desiredheight ) {
-		// both multipliers are guaranteed to be greater than one
-		// we want to take the one that is smaller
-		$mult = min($desiredwidth / $width, $desiredheight / $height);
-		
-		$width =  (int) ($width  * $mult);
-		$height = (int) ($height * $mult);
-	}
-?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -46,6 +10,7 @@
 		<!--[if lt IE 9]>
 			<script src="/js/html5shiv.min.js"></script>
 		<![endif]-->
+		<script src="/js/jquery.min.js"></script>
 		<style>
 			span.dim {
 				color: #4D4D4D; /* I guess this is redundant now... */
@@ -71,16 +36,9 @@
 			<header><h1>WILL THIS IS FOR YOU</h1></header>
 			<?php include $_SERVER['DOCUMENT_ROOT'].'/snippets/navbar.php'; ?>
 			<main class="hasSideBar">
-				<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileext?>"><?=$filenamenoext?>.<?=$randomextension?></h2>
-				<object
-					class="centered"
-					style="border: 1px solid black; background-color:#FF0000;"
-					type="<?=$mimetype?>"
-					data="<?=$filepath?>"
-					width="<?=$width?>"
-					height="<?=$height?>">
-					Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
-				</object>
+				<div id="swfSlot">
+<?php include $_SERVER['DOCUMENT_ROOT'].'/php/randomwillswf.php'; ?>
+				</div>
 				<div style="text-align: center; margin-top: 30px">
 					<span class="dim" style="position: relative; margin-left: auto; margin-right: auto">
 						<a href="/index.shtml"><span class="linkoverlay"></span></a> <!-- MAGIC to make the entire parent element, which must be relative, a clickable link -->
@@ -88,9 +46,30 @@
 						<a style="position: relative; z-index: 2" class="dim" href="/index.shtml">here</a><!-- Extra sparkles to make the real link still underline on mouseover -->
 					</span>
 				</div>
+				
+				<a href="#" onclick="refreshSwf()">derp</a>
+				
 			</main>
 			<?php include $_SERVER['DOCUMENT_ROOT'].'/snippets/footer.html'; ?>
 		</div>
 		<?php include $_SERVER['DOCUMENT_ROOT'].'/snippets/piwik.html'; ?>
+		<script type="text/javascript">
+			function refreshSwf() {
+				$('#swfSlot').load('/php/randomwillswf.php', queueRefresh);
+			}
+			function queueRefresh() {
+				var time = parseFloat($('#randomSWF').attr('time')); // time in seconds 
+				if (time > 10)
+				{
+					console.log("Refresh queued in " + time + " seconds");
+					setTimeout(refreshSwf, Math.floor(1000 * parseFloat(time)));
+				}
+				else
+				{
+					console.log("This object is too short, so ne refresh was queued");
+				}
+			}
+			queueRefresh();
+		</script>
 	</body>
 </html>
