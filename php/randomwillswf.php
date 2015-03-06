@@ -21,7 +21,7 @@
 	$width = $imageSize[0];
 	$height = $imageSize[1];
 	
-	$extensions = array("jpg", "rar", "flac", "pdf", "txt", "ppt", "html", "ttf", "exe", "wmv");
+	$extensions = array("jpg", "rar", "zip", "pdf", "txt", "ppt", "ttf", "c", "exe", "scr", "md5", "sfv");
 	$randomExtension = strtoupper($extensions[array_rand($extensions)]);
 	
 	$swfLength = 0;
