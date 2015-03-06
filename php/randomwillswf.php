@@ -50,7 +50,7 @@
 		$width =  (int) ($width  * $mult);
 		$height = (int) ($height * $mult);
 	}
-?>					<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><?=$filenameNoExt?>.<?=$randomExtension?></h2>
+?>					<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><a href="<?=$filepath?>"><?=$filenameNoExt?>.<?=$randomExtension?></a></h2>
 					<object
 						id="randomSWF"
 						time="<?=$swfLength?>"

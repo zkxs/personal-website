@@ -12,6 +12,9 @@
 		<![endif]-->
 		<script src="/js/jquery.min.js"></script>
 		<style>
+			h2 > a:link, h2 > a:visited {
+				color: #D4D4D4;
+			}
 			span.dim {
 				color: #4D4D4D; /* I guess this is redundant now... */
 				font-size: 0.6em;
