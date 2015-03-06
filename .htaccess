@@ -287,8 +287,8 @@ AddDefaultCharset utf-8
 	RewriteEngine on
 	
     RewriteCond %{REMOTE_ADDR} ^129\.244\.128\.209$
-    RewriteCond %{REQUEST_URI} !/willindex.php
-    RewriteRule ^$ /willindex.php [R,L]
+    RewriteCond %{REQUEST_URI} !/willindex.shtml
+    RewriteRule ^$ /willindex.shtml [R,L]
 	
 	RewriteRule ^willindex.php$ /willindex.shtml [R=301,L]
 </IfModule>
