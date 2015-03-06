@@ -280,13 +280,17 @@ AddDefaultCharset utf-8
 #</IfModule>
 
 # ------------------------------------------------------------------------------
-# | fuck with Will                                                             |
+# | fucking with Will                                                          |
 # ------------------------------------------------------------------------------
 
 <IfModule mod_rewrite.c>
+	RewriteEngine on
+	
     RewriteCond %{REMOTE_ADDR} ^129\.244\.128\.209$
     RewriteCond %{REQUEST_URI} !/willindex.php
     RewriteRule ^$ /willindex.php [R,L]
+	
+	RewriteRule ^willindex.php$ /willindex.shtml [R=301,L]
 </IfModule>
 
 # ------------------------------------------------------------------------------
