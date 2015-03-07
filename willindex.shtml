@@ -65,23 +65,47 @@
 			
 			// called after the current swf is done loading
 			function queueRefresh() {
-				// first, lets do some debug loggin
+				// first, lets do some debug logging
 				var debugText = $('#swfDebug').text();
 				if (debugText !== "") {
 					console.log(debugText);
 				}
 				
-				var time = parseFloat($('#randomSWF').attr('time')); // time in seconds 
-				if (time > 10)
-				{
-					setTimeout(refreshSwf, Math.floor(1000 * parseFloat(time)));
-					console.log("Refresh queued in " + time + " seconds");
-				}
-				else
-				{
-					setTimeout(refreshSwf, 60000);
-					console.log("Refresh queued in 60 seconds (object loops)");
-				}
+				
+				var initialTimeout = setTimeout(function (){
+					//Set up a timer to periodically check value of PercentLoaded
+					var loadCheckInterval = setInterval(function (){
+						//Ensure Flash Player's PercentLoaded method is available and returns a value
+						if(typeof document.randomSWF.PercentLoaded !== "undefined" && document.randomSWF.PercentLoaded())
+						{
+							var swfPercent = document.randomSWF.PercentLoaded();
+							console.log(swfPercent + "% loaded");
+							//Once value == 100 (fully loaded) we can do whatever we want
+							if(swfPercent === 100)
+							{
+								//Clear timer
+								clearInterval(loadCheckInterval);
+								
+								//Execute function
+								var time = parseFloat($('#randomSWF').attr('time')); // time in seconds 
+								if (time > 10)
+								{
+									setTimeout(refreshSwf, Math.floor(1000 * parseFloat(time)));
+									console.log("Refresh queued in " + time + " seconds");
+								}
+								else
+								{
+									setTimeout(refreshSwf, 60000);
+									console.log("Refresh queued in 60 seconds (object loops)");
+								}
+							}
+						}
+						else
+						{
+							console.log("0% loaded");
+						}
+					}, 100);
+				}, 200);
 			}
 			
 			// load the initial swf
