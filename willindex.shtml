@@ -81,7 +81,7 @@
 							var swfPercent = document.randomSWF.PercentLoaded();
 							console.log(swfPercent + "% loaded");
 							//Once value == 100 (fully loaded) we can do whatever we want
-							if(swfPercent === 100)
+							if(swfPercent > 0) // it has probably started playing
 							{
 								//Clear timer
 								clearInterval(loadCheckInterval);
