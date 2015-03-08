@@ -59,12 +59,29 @@
 		<!--#include virtual="/snippets/piwik.html" -->
 		<script type="text/javascript">
 			
-			function refreshSwf() {
+			function doShit(swf)
+			{
+				var time = parseFloat(swf.attr('time')); // time in seconds 
+				if (time > 10)
+				{
+					setTimeout(refreshSwf, Math.floor(1000 * parseFloat(time)));
+					console.log("Refresh queued in " + time + " seconds");
+				}
+				else
+				{
+					setTimeout(refreshSwf, 60000);
+					console.log("Refresh queued in 60 seconds (object loops)");
+				}
+			}
+			
+			function refreshSwf()
+			{
 				$('#swfSlot').load('/php/randomwillswf.php', queueRefresh);
 			}
 			
 			// called after the current swf is done loading
-			function queueRefresh() {
+			function queueRefresh()
+			{
 				// first, lets do some debug logging
 				var debugText = $('#swfDebug').text();
 				if (debugText !== "") {
@@ -73,38 +90,40 @@
 				
 				
 				var initialTimeout = setTimeout(function (){
-					//Set up a timer to periodically check value of PercentLoaded
-					var loadCheckInterval = setInterval(function (){
-						//Ensure Flash Player's PercentLoaded method is available and returns a value
-						if(typeof document.randomSWF.PercentLoaded !== "undefined" && document.randomSWF.PercentLoaded())
-						{
-							var swfPercent = document.randomSWF.PercentLoaded();
-							console.log(swfPercent + "% loaded");
-							//Once value == 100 (fully loaded) we can do whatever we want
-							if(swfPercent > 0) // it has probably started playing
+				
+					var swf = $('#randomSWF');
+					if (swf.attr('type') === "application/x-shockwave-flash")
+					{
+						//Set up a timer to periodically check value of PercentLoaded
+						var loadCheckInterval = setInterval(function (){
+							
+							
+							//Ensure Flash Player's PercentLoaded method is available and returns a value
+							if(typeof document.randomSWF.PercentLoaded !== "undefined" && document.randomSWF.PercentLoaded())
 							{
-								//Clear timer
-								clearInterval(loadCheckInterval);
-								
-								//Execute function
-								var time = parseFloat($('#randomSWF').attr('time')); // time in seconds 
-								if (time > 10)
+								var swfPercent = document.randomSWF.PercentLoaded();
+								console.log(swfPercent + "% loaded");
+								//Once value == 100 (fully loaded) we can do whatever we want
+								if(swfPercent > 0) // it has probably started playing
 								{
-									setTimeout(refreshSwf, Math.floor(1000 * parseFloat(time)));
-									console.log("Refresh queued in " + time + " seconds");
-								}
-								else
-								{
-									setTimeout(refreshSwf, 60000);
-									console.log("Refresh queued in 60 seconds (object loops)");
+									//Clear timer
+									clearInterval(loadCheckInterval);
+									
+									//Execute function
+									doShit(swf);
 								}
 							}
-						}
-						else
-						{
-							console.log("0% loaded");
-						}
-					}, 100);
+							else
+							{
+								console.log("0% loaded");
+							}
+						}, 100);
+					}
+					else
+					{
+						// not a swf, so skip the loading polling
+						doShit(swf);
+					}
 				}, 200);
 			}
 			
