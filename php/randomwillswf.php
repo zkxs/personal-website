@@ -50,6 +50,13 @@
 		$width =  (int) ($width  * $mult);
 		$height = (int) ($height * $mult);
 	}
+	
+	$diaz = $mimeType != "application/x-shockwave-flash" && strpos($filenameNoExt, 'DIAZ') !== FALSE;
+	if ($diaz)
+	{
+		$swfLength = 13;
+	}
+	
 ?>					<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><a href="<?=$filepath?>"><?=$filenameNoExt?>.<?=$randomExtension?></a></h2>
 					<object
 						id="randomSWF"
@@ -62,6 +69,13 @@
 						height="<?=$height?>">
 						Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
 					</object>
+					
+					<?php if($diaz): ?>
+					<audio src="/files/twilight_zone.mp3" autoplay="" style="display: none">
+						Your browser does not support the <code>audio</code> element.
+					</audio>
+					<?php endif; ?>
+					
 <pre id="swfDebug" style="display: none;">
 <?php
 	if ($debugPrint) {
