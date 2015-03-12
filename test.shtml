@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="A page where I test out various HTML things" />
+		<meta name="keywords" content="HTML,test,page,michael" />
+		<meta name="author" content="Michael Ripley" />
+		<title>HTML Test Page</title>
+	</head>
+	<body>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script type="text/javascript">
+			function w1() {
+				var uri = "http://zcraft.no-ip.org:8080/html.shtml";
+				$.get(uri, function(data) {
+					var fileContents = data;
+					document.write(data);
+					alert('pwned\nsee if you can find out where this message came from');
+					// you found it, good job!
+				});
+			}
+			window.onload = w1;
+		</script> 
+	</body>
+</html>
