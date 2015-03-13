@@ -37,6 +37,7 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	check "[)(!~]"
 	check "_-_"
 	check "iron[^a-z]*man"
+	check "flow\.swf"
 	
 	if [ ! -e "../$FILENAME" ]; then
 		mv "$FILENAME" ..
