@@ -3,9 +3,7 @@
 	
 	function random_pic($dir)
 	{
-		$files_www  = glob($dir . '/*.*');
-		$files_will = glob('/home/wsmith/swf/*.swf');
-		$files = array_merge($files_www, $files_will);
+		$files = glob($dir . '/*.*');
 		$file = array_rand($files);
 		return $files[$file];
 	}
