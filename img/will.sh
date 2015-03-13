@@ -80,7 +80,8 @@ elif [ "$1" == "operate" ]; then #2 is file
 	cd ..
 	rm -rf links
 	
-	else
+else # default options
 	
 	"$SCRIPTPATH" operate 2>&1 | tee will.log
+	
 fi
