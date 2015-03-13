@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPTPATH="$(readlink -f "$0")"
+
 if [ "$1" == "makelink" ]; then # $2 is full path to file
 	
 	FILENAME="$(basename "$2")"
@@ -39,13 +41,15 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	check "iron[^a-z]*man"
 	check "flow\.swf"
 	
-	if [ ! -e "../$FILENAME" ]; then
+	if [ -e "../$FILENAME" ]; then
+		if [ "$(readlink -f "../$FILENAME")" != "$(readlink -f "$FILENAME")" ]; then 
+			echo "Prexisting file: $FILENAME"
+		fi
+	else
 		mv "$FILENAME" ..
 	fi
 	
-else
-	
-	SCRIPTPATH="$(readlink -f "$0")"
+elif [ "$1" == "operate" ]; then #2 is file
 	
 	function renamingfunction {
 		rename $@ 'y/A-Z/a-z/' * # upper to lower case
@@ -58,6 +62,9 @@ else
 	
 	
 	cd will
+	
+	# remove dead symlinks
+	find -L . -type l -delete
 	
 	# process our trusted files first
 	renamingfunction -v
@@ -73,5 +80,7 @@ else
 	cd ..
 	rm -rf links
 	
+	else
 	
+	"$SCRIPTPATH" operate 2>&1 | tee will.log
 fi

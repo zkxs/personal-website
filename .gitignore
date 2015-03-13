@@ -31,3 +31,6 @@
 !/tmp/phishing
 /tmp/phishing/*
 !/tmp/phishing/.htaccess
+
+# generated files
+*.log
