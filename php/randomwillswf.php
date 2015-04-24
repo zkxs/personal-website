@@ -51,6 +51,19 @@
 		$height = (int) ($height * $mult);
 	}
 	
+	// downscale giant swfs
+	$desiredwidth = 1280;
+	$desiredheight = 720;
+	if ($width > $desiredwidth || $height > $desiredheight )
+	{
+		// both multipliers are guaranteed to be less than one
+		// we want to take the one that is smaller
+		$mult = min($desiredwidth / $width, $desiredheight / $height);
+		
+		$width =  (int) ($width  * $mult);
+		$height = (int) ($height * $mult);
+	}
+	
 	$diaz = $mimeType != "application/x-shockwave-flash" && strpos($filenameNoExt, 'DIAZ') !== FALSE;
 	if ($diaz)
 	{
