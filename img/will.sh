@@ -76,6 +76,7 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	# Check for disallowed files
 	check "iron[^a-z]*man" 1
 	check "flow\.swf" 1
+	check "hyper_railgun" 1
 	
 	if [ -e "../$FILENAME" ]; then
 		if [ "$(readlink -f "../$FILENAME")" != "$(readlink -f "$FILENAME")" ]; then 
