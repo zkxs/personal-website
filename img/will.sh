@@ -50,7 +50,7 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	REALFILE="$(readlink -f "$2")"
 	
 	function check {
-		RESULT=$(echo "$FILENAME" | grep -c "$1")
+		RESULT=$(echo "$FILENAME" | egrep -c "$1")
 		
 		if [ $RESULT -ne 0 ]; then
 			if [ "$2" == "1" ]; then
@@ -76,8 +76,9 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	# Check for disallowed files
 	check "iron[^a-z]*man" 1
 	check "flow\.swf" 1
-	check "hyper_railgun" 1
-	check "james_driving" 1
+	check "hyper.?railgun" 1
+	check "james.?driving" 1
+	check "bad.?apple" 1
 	
 	if [ -e "../$FILENAME" ]; then
 		if [ "$(readlink -f "../$FILENAME")" != "$(readlink -f "$FILENAME")" ]; then 
