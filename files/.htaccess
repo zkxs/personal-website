@@ -27,3 +27,4 @@ AddDescription "GreaseMonkey user scripts of my own creation" userscripts
 #AddType text/plain .bat
 AddType text/plain .init
 AddType text/plain .java
+AddType text/html .com
