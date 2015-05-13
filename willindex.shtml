@@ -32,6 +32,29 @@
 				z-index: 1;
 				background-image: url('/img/empty.gif'); /* fixes overlap error in IE7/8 */
 			}
+			a.button {
+				display: block;
+				font-size: 16px;
+				text-decoration: none;
+				color: #36D900;
+				background-color: #222222;
+				height: 30px;
+				-webkit-transition: padding-right 0.3s; /* Safari */
+				transition: padding-right 0.3s;
+				line-height: 30px;
+				vertical-align:middle; /* valign center text */
+				text-align: center; /* haligh center text */
+				border-radius: 15px;
+				overflow: hidden;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			a.button:active {
+				color: #FF0000;
+			}
+			a.button:hover {
+				background-color: #444444;
+			}
 		</style>
 	</head>
 	<body>
@@ -40,7 +63,10 @@
 			<!--#include virtual="/snippets/navbar.shtml" -->
 			<main class="hasSideBar">
 				<div id="swfSlot"><!-- This is filled in by javascript --></div>
-				<div style="text-align: center; margin-top: 30px">
+				<a class="button" style="margin-left: auto; margin-right: auto; width: 120px;" href="./willindex.shtml">
+					Next SWF
+				</a>
+				<div style="text-align: center; margin-top: 10px">
 					<span class="dim" style="position: relative; margin-left: auto; margin-right: auto">
 						<a href="/index.shtml"><span class="linkoverlay"></span></a> <!-- MAGIC to make the entire parent element, which must be relative, a clickable link -->
 						...but if you actually need the real index it's
@@ -172,7 +198,14 @@
 			$(window).on('hashchange', ohHashChange);
 			
 			// load the initial swf
-			refreshSwf(location.hash);
+			if (location.hash)
+			{
+				refreshSwf(location.hash.substring(1));
+			}
+			else
+			{
+				refreshSwf();
+			}
 			
 		</script>
 	</body>
