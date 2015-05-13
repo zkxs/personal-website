@@ -4,6 +4,15 @@
 	function random_pic($dir)
 	{
 		$files = glob($dir . '/*.*');
+		
+		if (!empty($_GET['swf'])) {
+			$requested = $_GET['swf'];
+			$requestedFile = $dir . '/' . $requested;
+			if (file_exists($requestedFile )) {
+				return $requestedFile;
+			}
+		}
+		
 		$file = array_rand($files);
 		return $files[$file];
 	}
