@@ -155,7 +155,7 @@
 					var filename = swf.attr('data');
 					filename = filename.substring(filename.lastIndexOf('/') + 1);
 					currentFilename = filename;
-					location.hash = '#' + encodeURIComponent(filename); // we only need to urlencode when WE set the filename
+					location.hash = '#' + filename; // might need to be urlencoded
 					if (swf.attr('type') === "application/x-shockwave-flash")
 					{
 						//Set up a timer to periodically check value of PercentLoaded
