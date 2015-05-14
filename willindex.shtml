@@ -62,10 +62,21 @@
 			<header><h1>WILL THIS IS FOR YOU</h1></header>
 			<!--#include virtual="/snippets/navbar.shtml" -->
 			<main class="hasSideBar">
-				<div id="swfSlot"><!-- This is filled in by javascript --></div>
-				<a class="button" style="margin-left: auto; margin-right: auto; width: 120px;" href="./willindex.shtml">
-					Next SWF
-				</a>
+				<div id="swfSlot">
+					<!-- This is filled in by javascript -->
+					<noscript>
+						<p>If you think this looks ugly turn on JavaScript</p>
+						<iframe style="width: 1280px; height: 720px" src="/php/randomwillswf.php" seamless="seamless" frameborder="0" scrolling="no"></iframe>
+					</noscript>
+				</div>
+				<form name="options" style="text-align: center">
+					<a id="nextbutton" class="button" style="margin-left: auto; margin-right: auto; width: 120px;" href="./willindex.shtml">
+						Next SWF
+					</a>
+					<input id="pausedcheckbox" type="checkbox" name="paused" value="1" checked="checked" disabled="disabled">
+						Loop Current SWF
+					</input>
+				</form>
 				<div style="text-align: center; margin-top: 10px">
 					<span class="dim" style="position: relative; margin-left: auto; margin-right: auto">
 						<a href="/index.shtml"><span class="linkoverlay"></span></a> <!-- MAGIC to make the entire parent element, which must be relative, a clickable link -->
@@ -85,35 +96,84 @@
 		<!--#include virtual="/snippets/piwik.html" -->
 		<script type="text/javascript">
 			
+			// shim to fix IE8 and earlier being shit
+			if (!Date.now) {
+				Date.now = function() { return new Date().getTime(); }
+			}
+			
 			var timeoutID;
 			var initialTimeoutID;
 			var currentFilename;
+			var finished = false;
+			var timeLoaded;
 			
-			function doShit(swf)
+			function paused()
+			{
+				return $('#pausedcheckbox').prop('checked');
+			}
+			
+			function onPauseChange()
+			{
+				if (!paused()) // if we changed from paused to unpaused
+				{
+					if (finished)
+					{
+						loadNextSwf();
+					}
+				}
+			}
+			
+			function onNextButtonClick()
+			{
+				loadNextSwf();
+				return false; // cancel normal html link navigation
+			}
+			
+			function onObjectLoaded(swf)
 			{
 				var time = parseFloat(swf.attr('time')); // time in seconds 
 				if (time > 10)
 				{
-					timeoutID = setTimeout(refreshSwf, Math.floor(1000 * parseFloat(time)));
+					timeoutID = setTimeout(loadNextSwf, Math.floor(1000 * parseFloat(time)));
 					console.log("Refresh queued in " + time + " seconds");
 				}
 				else
 				{
-					timeoutID = setTimeout(refreshSwf, 60000);
+					timeoutID = setTimeout(loadNextSwf, 60000);
 					console.log("Refresh queued in 60 seconds (object loops)");
 				}
 			}
 			
-			function refreshSwf(requested)
+			function loadNextSwf(requested)
 			{
-				if (requested)
+				// clear any running timers
+				if (timeoutID) {
+					clearTimeout(timeoutID);
+					timeoutID = null;
+				}
+				if (initialTimeoutID) {
+					clearTimeout(initialTimeoutID);
+					initialTimeoutID = null;
+				}
+				
+				finished = true;
+				if (!paused())
 				{
-					$('#swfSlot').load('/php/randomwillswf.php?swf=' 
-							+ requested, queueRefresh); // should already be urlencoded
+					finished = false;
+					
+					if (requested)
+					{
+						$('#swfSlot').load('/php/randomwillswf.php?swf=' 
+								+ requested, queueRefresh); // should already be urlencoded
+					}
+					else
+					{
+						$('#swfSlot').load('/php/randomwillswf.php', queueRefresh);
+					}
 				}
 				else
 				{
-					$('#swfSlot').load('/php/randomwillswf.php', queueRefresh);
+					console.log("waiting for 'paused' checkbox to be unchecked");
 				}
 			}
 			
@@ -125,16 +185,7 @@
 					if (newFilename != currentFilename)
 					{
 						console.log("hash changed to " + location.hash);
-						if (timeoutID) {
-							clearTimeout(timeoutID);
-							timeoutID = null;
-						}
-						if (initialTimeoutID) {
-							clearTimeout(initialTimeoutID);
-							initialTimeoutID = null;
-						}
-						
-						refreshSwf(newFilename);
+						loadNextSwf(newFilename);
 					}
 				}
 			}
@@ -142,6 +193,8 @@
 			// called after the current swf is done loading
 			function queueRefresh()
 			{
+				timeLoaded = Date.now();
+			
 				// first, lets do some debug logging
 				var debugText = $('#swfDebug').text();
 				if (debugText) {
@@ -178,7 +231,7 @@
 									clearInterval(loadCheckInterval);
 									
 									//Execute function
-									doShit(swf);
+									onObjectLoaded(swf);
 								}
 							}
 							else
@@ -190,21 +243,26 @@
 					else
 					{
 						// not a swf, so skip the loading polling
-						doShit(swf);
+						onObjectLoaded(swf);
 					}
 				}, 200);
 			}
 			
+			var pausedCheckbox = $('#pausedcheckbox')
+			pausedCheckbox.removeAttr("checked");
+			pausedCheckbox.removeAttr("disabled");
+			pausedCheckbox.change(onPauseChange);
+			$('#nextbutton').click(onNextButtonClick);
 			$(window).on('hashchange', ohHashChange);
 			
 			// load the initial swf
 			if (location.hash)
 			{
-				refreshSwf(location.hash.substring(1));
+				loadNextSwf(location.hash.substring(1));
 			}
 			else
 			{
-				refreshSwf();
+				loadNextSwf();
 			}
 			
 		</script>
