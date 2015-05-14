@@ -79,6 +79,7 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	check "hyper.?railgun" 1
 	check "james.?driving" 1
 	check "bad.?apple" 1
+	check "citronnade.flower" 1
 	
 	if [ -e "../$FILENAME" ]; then
 		if [ "$(readlink -f "../$FILENAME")" != "$(readlink -f "$FILENAME")" ]; then 
