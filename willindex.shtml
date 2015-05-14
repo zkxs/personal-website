@@ -125,7 +125,14 @@
 			
 			function onNextButtonClick()
 			{
-				loadNextSwf();
+				var currentTime = Date.now();
+				
+				// the user did not click immediately after a refresh
+				if (currentTime - timeLoaded > 500)
+				{
+					loadNextSwf();
+				}
+				
 				return false; // cancel normal html link navigation
 			}
 			
