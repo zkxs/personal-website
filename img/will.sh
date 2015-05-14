@@ -9,16 +9,20 @@ if [ "$1" == "makelink" ]; then # $2 is full path to file
 	
 	#find . -type l -exec readlink -f "{}" \; | fgrep -c "$2" # find duplicates
 	
-	ln -s "$FILEPATH" "$FILENAME" 2>/dev/null
-	RESULT="$?"
-	if [ "$RESULT" = "0" ]; then # no problems
-		: # do nothing
-	elif [ "$RESULT" = "1" ]; then # duplicate file
-		"$SCRIPTPATH" printdupe "$FILEPATH"
-	else # unknown
-		echo "Unknown error $RESULT when making link to $FILEPATH"
+	# check if readable
+	if [ -r "$FILEPATH" ]; then
+		ln -s "$FILEPATH" "$FILENAME" 2>/dev/null
+		RESULT="$?"
+		if [ "$RESULT" = "0" ]; then # no problems
+			: # do nothing
+		elif [ "$RESULT" = "1" ]; then # duplicate file
+			"$SCRIPTPATH" printdupe "$FILEPATH"
+		else # unknown
+			echo "Unknown error $RESULT when making link to $FILEPATH"
+		fi
+	else # not readable
+		echo "No read permission: $FILEPATH"
 	fi
-	
 
 elif [ "$1" == "printdupe" ]; then #2 is a file whose link already exists
 
