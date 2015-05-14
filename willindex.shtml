@@ -105,6 +105,7 @@
 			var initialTimeoutID;
 			var currentFilename;
 			var finished = false;
+			var ignoreUnpause = false;
 			var timeLoaded;
 			
 			function paused()
@@ -114,12 +115,10 @@
 			
 			function onPauseChange()
 			{
-				if (!paused()) // if we changed from paused to unpaused
+				// if we changed from paused to unpaused and should load the next swf
+				if (!ignoreUnpause && finished && !paused())
 				{
-					if (finished)
-					{
-						loadNextSwf();
-					}
+					loadNextSwf();
 				}
 			}
 			
@@ -130,7 +129,10 @@
 				// the user did not click immediately after a refresh
 				if (currentTime - timeLoaded > 500)
 				{
+					ignoreUnpause = true;
+					pausedCheckbox.removeAttr("checked");
 					loadNextSwf();
+					ignoreUnpause = false;
 				}
 				
 				return false; // cancel normal html link navigation
