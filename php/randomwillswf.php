@@ -84,7 +84,7 @@
 						id="randomSWF"
 						time="<?=$swfLength?>"
 						class="centered"
-						style="border: 1px solid black; background-color:#FF0000;"
+						style="border: 1px solid black"
 						type="<?=$mimeType?>"
 						data="<?=$filepath?>"
 						width="<?=$width?>"
