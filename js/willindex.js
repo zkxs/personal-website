@@ -3,6 +3,8 @@ if (!Date.now) {
 	Date.now = function() { return new Date().getTime(); }
 }
 
+var debugging = false;
+var currentSWF = null;
 var swfNumber = 0; // the number of the SWF we are currently on (0 if none loaded yet)
 var timeoutID;
 var initialTimeoutID;
@@ -10,6 +12,13 @@ var currentFilename;
 var finished = false;
 var ignoreUnpause = false;
 var timeLoaded;
+
+function debug()
+{
+	debugging = true;
+	$('#swfDebug').show();
+	return "You are now a developer!";
+}
 
 function paused()
 {
@@ -118,12 +127,24 @@ function queueRefresh(queuedSwfNumber)
 	
 	// because jQuery is shit even though the callback has been called, it will take a while for the object to be added to the DOM
 
-	var initialTimeoutID = setTimeout(function (){
+	var initialTimeoutID = setInterval(function (){
 	
 		// get the elements we're going to be working with
+		var swf = document.randomSWF;
+		
+		if (swf && swf != currentSWF)
+		{
+			clearInterval(initialTimeoutID);
+			currentSWF = swf;
+		}
+		else
+		{
+			// maybe next time
+			return;
+		}
+		
 		var slot = document.getElementById("swfSlot");
 		var container = document.getElementById("swfContainer");
-		var swf = document.randomSWF;
 		var swf_jquery = $('#randomSWF');
 		var isFlash = swf_jquery.attr('type') === "application/x-shockwave-flash";
 		var progressNode = null; // might never come into being
@@ -142,14 +163,22 @@ function queueRefresh(queuedSwfNumber)
 
 		// do some debug logging
 		var debugText = $('#swfDebug').text();
-		if (debugText) {
-			console.log(debugText);
+		if (debugging && debugText) {
+			console.log("DEBUG INFO:\n" + debugText);
+			$('#swfDebug').show();
 		}
 		
 		var filename = swf_jquery.attr('data');
 		filename = filename.substring(filename.lastIndexOf('/') + 1);
 		currentFilename = filename;
 		location.hash = '#' + filename; // might need to be urlencoded
+		
+		// if we are debugging we already have this and more logged
+		if (!debugging)
+		{
+			console.log("loading " + filename);
+		}
+		
 		if (isFlash)
 		{
 			// Set up a timer to periodically check value of PercentLoaded
@@ -231,7 +260,7 @@ function queueRefresh(queuedSwfNumber)
 			// not a swf, so skip the loading polling
 			onObjectLoaded(swf_jquery, queuedSwfNumber);
 		}
-	}, 200);
+	}, 1);
 }
 
 var pausedCheckbox = $('#pausedcheckbox')
@@ -250,3 +279,5 @@ else
 {
 	loadNextSwf();
 }
+
+console.log("For debug info, run debug()");
