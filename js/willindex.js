@@ -7,7 +7,6 @@ var debugging = false;
 var currentSWF = null;
 var swfNumber = 0; // the number of the SWF we are currently on (0 if none loaded yet)
 var timeoutID;
-var initialTimeoutID;
 var currentFilename;
 var finished = false;
 var ignoreUnpause = false;
@@ -72,10 +71,6 @@ function loadNextSwf(requested)
 		clearTimeout(timeoutID);
 		timeoutID = null;
 	}
-	if (initialTimeoutID) {
-		clearTimeout(initialTimeoutID);
-		initialTimeoutID = null;
-	}
 	
 	finished = true;
 	if (!paused())
@@ -83,14 +78,23 @@ function loadNextSwf(requested)
 		finished = false;
 		swfNumber += 1;
 		
+		/*
+		 * You must be wondering why I don't use jQuery callbacks here to
+		 * perform an action once the content is loaded. The answer is simple:
+		 * the jQuery callback is called before the fucking content is done
+		 * fucking loading. I'm not sure if this is a bug or some moron thought
+		 * it would be a good idea to have the callback trigger a few hundered
+		 * milliseconds before it is useful.
+		 */
+		
 		if (requested)
 		{
-			$('#swfSlot').load('/php/randomwillswf.php?swf=' 
-					+ requested);//, queueRefresh(swfNumber)); // should already be urlencoded
+			// 'requested' should already be urlencoded
+			$('#swfSlot').load('/php/randomwillswf.php?swf=' + requested);
 		}
 		else
 		{
-			$('#swfSlot').load('/php/randomwillswf.php');//, queueRefresh(swfNumber));
+			$('#swfSlot').load('/php/randomwillswf.php');
 		}
 	}
 	else
@@ -99,6 +103,11 @@ function loadNextSwf(requested)
 	}
 }
 
+/*
+ * if the user changes the page's hash, load the swf. If the hash is invalid
+ * the PHP code will just give us a random file, and we'll change the hash on
+ * this end to match.
+ */
 function ohHashChange()
 {
 	if (location.hash)
@@ -112,146 +121,132 @@ function ohHashChange()
 	}
 }
 
-// called after the current swf is done loading
+// magically called after the current swf is done loading
 function queueRefresh(filename)
 {
 	timeLoaded = Date.now();
-	
-	// because jQuery is shit even though the callback has been called, it will take a while for the object to be added to the DOM
 
-	//var initialTimeoutID = setInterval(function (){
+	// get the elements we're going to be working with
+	var swf = document.randomSWF;
+	var isFlash;
 	
-		// get the elements we're going to be working with
-		var swf = document.randomSWF;
-		
-		if (swf && swf != currentSWF)
-		{
-			clearInterval(initialTimeoutID);
-			currentSWF = swf;
-		}
-		else
-		{
-			// maybe next time
-			return;
-		}
-		
-		var slot = document.getElementById("swfSlot");
-		var container = document.getElementById("swfContainer");
-		var swf_jquery = $('#randomSWF');
-		var isFlash = swf_jquery.attr('type') === "application/x-shockwave-flash";
-		var progressNode = null; // might never come into being
-		
-		if (isFlash)
-		{
-			// pause the swf
-			var pauseParamNode = document.createElement("param");
-			pauseParamNode.setAttribute("name", "play");
-			pauseParamNode.setAttribute("value", "false");
-			swf.appendChild(pauseParamNode);
+	if (isFlash = swf.StopPlay)
+	{
+		swf.StopPlay();
+	}
+	
+	document.cookie = "first=" + "wat";
+	document.cookie = "last=" + filename;
+	
+	var slot = document.getElementById("swfSlot");
+	var container = document.getElementById("swfContainer");
+	var swf_jquery = $('#randomSWF');
+	var progressNode = null; // might never come into being
+	
+	if (isFlash)
+	{	
+		// hide the swf
+		swf.style.visibility = "hidden";
+	}
+
+	// do some debug logging
+	var debugText = $('#swfDebug').text();
+	if (debugging && debugText) {
+		console.log("DEBUG INFO:\n" + debugText);
+		$('#swfDebug').show();
+	}
+	
+	currentFilename = filename;
+	location.hash = '#' + filename; // might need to be urlencoded
+	
+	// if we are debugging we already have this and more logged
+	if (!debugging)
+	{
+		console.log("loading " + filename);
+	}
+	
+	if (isFlash)
+	{
+		// Set up a timer to periodically check value of PercentLoaded
+		var loadCheckInterval = setInterval(function (){
 			
-			// hide the swf
-			swf.style.visibility = "hidden";
-		}
-
-		// do some debug logging
-		var debugText = $('#swfDebug').text();
-		if (debugging && debugText) {
-			console.log("DEBUG INFO:\n" + debugText);
-			$('#swfDebug').show();
-		}
-		
-		currentFilename = filename;
-		location.hash = '#' + filename; // might need to be urlencoded
-		
-		// if we are debugging we already have this and more logged
-		if (!debugging)
-		{
-			console.log("loading " + filename);
-		}
-		
-		if (isFlash)
-		{
-			// Set up a timer to periodically check value of PercentLoaded
-			var loadCheckInterval = setInterval(function (){
-				
-				// Ensure Flash Player's PercentLoaded method is available and returns a value
-				if(typeof swf.PercentLoaded !== "undefined" && swf.PercentLoaded())
+			// Ensure Flash Player's PercentLoaded method is available and returns a value
+			if(typeof swf.PercentLoaded !== "undefined" && swf.PercentLoaded())
+			{
+				var swfPercent = swf.PercentLoaded();
+				if (progressNode)
 				{
-					var swfPercent = swf.PercentLoaded();
-					if (progressNode)
+					progressNode.setAttribute("value", swfPercent);
+				}
+				// Once value == 100 (fully loaded) we can do whatever we want
+				if (currentFilename != filename) // if we're invalid
+				{
+					clearInterval(loadCheckInterval);
+				}
+				else if(swfPercent >= 100) // it has probably started playing
+				{
+					var timeDoneLoading = Date.now();
+					
+					// Clear timer
+					clearInterval(loadCheckInterval);
+					
+					var endTransition = function()
 					{
-						progressNode.setAttribute("value", swfPercent);
-					}
-					// Once value == 100 (fully loaded) we can do whatever we want
-					if (currentFilename != filename) // if we're invalid
-					{
-						clearInterval(loadCheckInterval);
-					}
-					else if(swfPercent >= 100) // it has probably started playing
-					{
-						var timeDoneLoading = Date.now();
-						
-						// Clear timer
-						clearInterval(loadCheckInterval);
-						
-						var endTransition = function()
+						if (currentFilename == filename) // if we're still valid
 						{
-							if (currentFilename == filename) // if we're still valid
+							swf.style.visibility = "initial";
+							swf.Play(); // Play the SWF
+							if (progressNode)
 							{
-								swf.style.visibility = "initial";
-								swf.Play(); // Play the SWF
-								if (progressNode)
-								{
-									container.removeChild(progressNode);
-								}
-								// Execute function
-								onObjectLoaded(swf_jquery);
+								container.removeChild(progressNode);
 							}
-						}
-						
-						// if we took a while to load
-						if (progressNode && timeDoneLoading - timeLoaded > 1000)
-						{
-							// fade out the progress bar
-							$("#swfProgress").fadeOut(500, endTransition);
-						}
-						else // we loaded really fast
-						{
-							// no transition
-							endTransition();
+							// Execute function
+							onObjectLoaded(swf_jquery);
 						}
 					}
-					else
+					
+					// if we took a while to load
+					if (progressNode && timeDoneLoading - timeLoaded > 1000)
 					{
-						// add the progress bar
-						if (!progressNode)
-						{
-							container.style.position = "relative";
-							progressNode = document.createElement("progress");
-							progressNode.id = "swfProgress";
-							progressNode.setAttribute("value", swfPercent);
-							progressNode.setAttribute("max", 100);
-							progressNode.style.position = "absolute";
-							progressNode.style.left = "50%";
-							progressNode.style.top = "50%";
-							progressNode.style.transform = "translate(-50%, -50%)";
-							container.appendChild(progressNode);
-						}
+						// fade out the progress bar
+						$("#swfProgress").fadeOut(500, endTransition);
+					}
+					else // we loaded really fast
+					{
+						// no transition
+						endTransition();
 					}
 				}
 				else
 				{
-					clearInterval(loadCheckInterval);
+					// add the progress bar
+					if (!progressNode)
+					{
+						container.style.position = "relative";
+						progressNode = document.createElement("progress");
+						progressNode.id = "swfProgress";
+						progressNode.setAttribute("value", swfPercent);
+						progressNode.setAttribute("max", 100);
+						progressNode.style.position = "absolute";
+						progressNode.style.left = "50%";
+						progressNode.style.top = "50%";
+						progressNode.style.transform = "translate(-50%, -50%)";
+						container.appendChild(progressNode);
+					}
 				}
-			}, 100);
-		}
-		else
-		{
-			// not a swf, so skip the loading polling
-			console.log("not flash");
-			onObjectLoaded(swf_jquery);
-		}
-	//}, 1);
+			}
+			else
+			{
+				clearInterval(loadCheckInterval);
+			}
+		}, 100);
+	}
+	else
+	{
+		// not a swf, so skip the loading polling
+		console.log("not flash");
+		onObjectLoaded(swf_jquery);
+	}
 }
 
 var pausedCheckbox = $('#pausedcheckbox')

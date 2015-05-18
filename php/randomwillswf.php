@@ -79,34 +79,38 @@
 		$swfLength = 13;
 	}
 	
-?>					<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><a href="<?=$filepath?>"><?=$filenameNoExt?>.<?=$randomExtension?></a></h2>
-					<div id="swfContainer">
-						<object
-							id="randomSWF"
-							time="<?=$swfLength?>"
-							class="centered"
-							style="border: 1px solid black"
-							type="<?=$mimeType?>"
-							data="<?=$filepath?>"
-							width="<?=$width?>"
-							height="<?=$height?>">
-								Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
-						</object>
-						<script type="text/javascript">
-							var swf = document.randomSWF;
-							if (!swf)
-							{
-								console.log("this should not happen");
-							}
-							queueRefresh('<?=$filename?>');
-						</script>
-					</div>
-					
-					<?php if($diaz): ?>
-					<audio src="/files/twilight_zone.mp3" autoplay="" style="display: none">
-						Your browser does not support the <code>audio</code> element.
-					</audio>
-					<?php endif; ?>
+?>
+<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><a href="<?=$filepath?>"><?=$filenameNoExt?>.<?=$randomExtension?></a></h2>
+<div id="swfContainer">
+	<object
+		id="randomSWF"
+		time="<?=$swfLength?>"
+		class="centered"
+		style="border: 1px solid black"
+		type="<?=$mimeType?>"
+		data="<?=$filepath?>"
+		width="<?=$width?>"
+		height="<?=$height?>">
+			Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
+	</object>
+	<script type="text/javascript">
+		var swf = document.randomSWF;
+		if (swf)
+		{
+			queueRefresh('<?=$filename?>');
+		}
+		else
+		{
+			console.log("this should not happen");
+		}
+	</script>
+</div>
+
+<?php if($diaz): ?>
+	<audio src="/files/twilight_zone.mp3" autoplay="" style="display: none">
+		Your browser does not support the <code>audio</code> element.
+	</audio>
+<?php endif; ?>
 					
 <pre id="swfDebug" style="display: none;">
 <?php
