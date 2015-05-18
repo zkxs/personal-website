@@ -74,7 +74,7 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	check '\s'
 	check "__"
 	check "'"
-	check "[)(!~]"
+	check "[)(!~;:]"
 	check "_-_"
 
 	# Check for disallowed files
@@ -101,7 +101,7 @@ elif [ "$1" == "operate" ]; then #2 is file
 		rename $@ 'y/A-Z/a-z/' * # upper to lower case
 		rename $@ 's/[\s]/_/g' * # whitespace
 		rename $@ "s/'//g" * # the ' character
-		rename $@ 's/[)(!~]//g' * # weird characters
+		rename $@ 's/[)(!~;:]//g' * # weird characters
 		rename $@ 's/__+/_/g' * # multiple _ characters
 		rename $@ 's/_-_/-/g' * # the _-_ sequence that sometimes happense after space replacement
 	}
