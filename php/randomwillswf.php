@@ -89,7 +89,7 @@
 						data="<?=$filepath?>"
 						width="<?=$width?>"
 						height="<?=$height?>">
-						Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
+							Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
 					</object>
 					
 					<?php if($diaz): ?>
