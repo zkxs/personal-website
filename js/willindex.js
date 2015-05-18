@@ -106,11 +106,20 @@ function queueRefresh()
 {
 	timeLoaded = Date.now();
 	
+	// get the elements we're going to be working with
+	var slot = document.getElementById("swfSlot");
+	var container = document.getElementById("swfContainer");
+	var swf = document.randomSWF;
+	var progressNode; // might never come into being
+	
 	// pause the swf
-	var node = document.createElement("param");
-	node.setAttribute("name", "play");
-	node.setAttribute("value", "false");
-	document.randomSWF.appendChild(node);
+	var pauseParamNode = document.createElement("param");
+	pauseParamNode.setAttribute("name", "play");
+	pauseParamNode.setAttribute("value", "false");
+	swf.appendChild(pauseParamNode);
+	
+	// hide the swf
+	swf.style.visibility = "hidden";
 
 	// do some debug logging
 	var debugText = $('#swfDebug').text();
@@ -121,21 +130,25 @@ function queueRefresh()
 	
 	var id = initialTimeoutID = setTimeout(function (){
 	
-		var swf = $('#randomSWF');
-		var filename = swf.attr('data');
+		var swf_jquery = $('#randomSWF');
+		var filename = swf_jquery.attr('data');
 		filename = filename.substring(filename.lastIndexOf('/') + 1);
 		currentFilename = filename;
 		location.hash = '#' + filename; // might need to be urlencoded
-		if (swf.attr('type') === "application/x-shockwave-flash")
+		if (swf_jquery.attr('type') === "application/x-shockwave-flash")
 		{
 			// Set up a timer to periodically check value of PercentLoaded
 			var loadCheckInterval = setInterval(function (){
 				
 				
 				// Ensure Flash Player's PercentLoaded method is available and returns a value
-				if(typeof document.randomSWF.PercentLoaded !== "undefined" && document.randomSWF.PercentLoaded())
+				if(typeof swf.PercentLoaded !== "undefined" && swf.PercentLoaded())
 				{
-					var swfPercent = document.randomSWF.PercentLoaded();
+					var swfPercent = swf.PercentLoaded();
+					if (progressNode)
+					{
+						progressNode.setAttribute("value", swfPercent);
+					}
 					console.log(swfPercent + "% loaded");
 					// Once value == 100 (fully loaded) we can do whatever we want
 					if (id != initialTimeoutID)
@@ -144,14 +157,52 @@ function queueRefresh()
 					}
 					else if(swfPercent >= 100) // it has probably started playing
 					{
+						var timeDoneLoading = Date.now();
+						
 						// Clear timer
 						clearInterval(loadCheckInterval);
 						
-						// Play the SWF
-						document.randomSWF.Play();
+						var endTransition = function()
+						{
+							swf.style.visibility = "initial";
+							swf.Play(); // Play the SWF
+							if (progressNode)
+							{
+								container.removeChild(progressNode);
+							}
+						}
+						
+						// if we took a while to load
+						if (timeDoneLoading - timeLoaded > 1000)
+						{
+							// fade out the progress bar
+							$("#swfProgress").fadeOut(500, endTransition);
+						}
+						else // we loaded really fast
+						{
+							// no transition
+							endTransition();
+						}
 						
 						// Execute function
-						onObjectLoaded(swf);
+						onObjectLoaded(swf_jquery);
+					}
+					else
+					{
+						// add the progress bar
+						if (!progressNode)
+						{
+							container.style.position = "relative";
+							progressNode = document.createElement("progress");
+							progressNode.id = "swfProgress";
+							progressNode.setAttribute("value", swfPercent);
+							progressNode.setAttribute("max", 100);
+							progressNode.style.position = "absolute";
+							progressNode.style.left = "50%";
+							progressNode.style.top = "50%";
+							progressNode.style.transform = "translate(-50%, -50%)";
+							container.appendChild(progressNode);
+						}
 					}
 				}
 				else

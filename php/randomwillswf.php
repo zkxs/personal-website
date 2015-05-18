@@ -80,17 +80,19 @@
 	}
 	
 ?>					<h2 style="text-align: center; margin: 0px;" title="actually .<?=$fileExt?>"><a href="<?=$filepath?>"><?=$filenameNoExt?>.<?=$randomExtension?></a></h2>
-					<object
-						id="randomSWF"
-						time="<?=$swfLength?>"
-						class="centered"
-						style="border: 1px solid black"
-						type="<?=$mimeType?>"
-						data="<?=$filepath?>"
-						width="<?=$width?>"
-						height="<?=$height?>">
-							Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
-					</object>
+					<div id="swfContainer">
+						<object
+							id="randomSWF"
+							time="<?=$swfLength?>"
+							class="centered"
+							style="border: 1px solid black"
+							type="<?=$mimeType?>"
+							data="<?=$filepath?>"
+							width="<?=$width?>"
+							height="<?=$height?>">
+								Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
+						</object>
+					</div>
 					
 					<?php if($diaz): ?>
 					<audio src="/files/twilight_zone.mp3" autoplay="" style="display: none">
