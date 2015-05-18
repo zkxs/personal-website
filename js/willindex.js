@@ -3,6 +3,7 @@ if (!Date.now) {
 	Date.now = function() { return new Date().getTime(); }
 }
 
+var swfNumber = 0; // the number of the SWF we are currently on (0 if none loaded yet)
 var timeoutID;
 var initialTimeoutID;
 var currentFilename;
@@ -40,18 +41,26 @@ function onNextButtonClick()
 	return false; // cancel normal html link navigation
 }
 
-function onObjectLoaded(swf)
+function onObjectLoaded(swf, queuedSwfNumber)
 {
-	var time = parseFloat(swf.attr('time')); // time in seconds 
-	if (time > 10)
+	// make sure this call originated from the swf that is currently loaded
+	if (queuedSwfNumber == swfNumber)
 	{
-		timeoutID = setTimeout(loadNextSwf, Math.floor(1000 * parseFloat(time)));
-		console.log("Refresh queued in " + time + " seconds");
+		var time = parseFloat(swf.attr('time')); // time in seconds 
+		if (time > 10)
+		{
+			timeoutID = setTimeout(loadNextSwf, Math.floor(1000 * parseFloat(time)));
+			console.log("Refresh queued in " + time + " seconds");
+		}
+		else
+		{
+			timeoutID = setTimeout(loadNextSwf, 60000);
+			console.log("Refresh queued in 60 seconds (object loops)");
+		}
 	}
 	else
 	{
-		timeoutID = setTimeout(loadNextSwf, 60000);
-		console.log("Refresh queued in 60 seconds (object loops)");
+		console.log("old queued refresh is no longer valid");
 	}
 }
 
@@ -71,15 +80,16 @@ function loadNextSwf(requested)
 	if (!paused())
 	{
 		finished = false;
+		swfNumber += 1;
 		
 		if (requested)
 		{
 			$('#swfSlot').load('/php/randomwillswf.php?swf=' 
-					+ requested, queueRefresh); // should already be urlencoded
+					+ requested, queueRefresh(swfNumber)); // should already be urlencoded
 		}
 		else
 		{
-			$('#swfSlot').load('/php/randomwillswf.php', queueRefresh);
+			$('#swfSlot').load('/php/randomwillswf.php', queueRefresh(swfNumber));
 		}
 	}
 	else
@@ -102,39 +112,39 @@ function ohHashChange()
 }
 
 // called after the current swf is done loading
-function queueRefresh()
+function queueRefresh(queuedSwfNumber)
 {
 	timeLoaded = Date.now();
 	
-	// get the elements we're going to be working with
-	var slot = document.getElementById("swfSlot");
-	var container = document.getElementById("swfContainer");
-	var swf = document.randomSWF;
-	var swf_jquery = $('#randomSWF');
-	var isFlash = swf_jquery.attr('type') === "application/x-shockwave-flash";
-	var progressNode = null; // might never come into being
-	
-	if (isFlash)
-	{
-		// pause the swf
-		var pauseParamNode = document.createElement("param");
-		pauseParamNode.setAttribute("name", "play");
-		pauseParamNode.setAttribute("value", "false");
-		swf.appendChild(pauseParamNode);
-		
-		// hide the swf
-		swf.style.visibility = "hidden";
-	}
+	// because jQuery is shit even though the callback has been called, it will take a while for the object to be added to the DOM
 
-	// do some debug logging
-	var debugText = $('#swfDebug').text();
-	if (debugText) {
-		console.log(debugText);
-	}
+	var initialTimeoutID = setTimeout(function (){
 	
-	
-	var id = initialTimeoutID = setTimeout(function (){
-	
+		// get the elements we're going to be working with
+		var slot = document.getElementById("swfSlot");
+		var container = document.getElementById("swfContainer");
+		var swf = document.randomSWF;
+		var swf_jquery = $('#randomSWF');
+		var isFlash = swf_jquery.attr('type') === "application/x-shockwave-flash";
+		var progressNode = null; // might never come into being
+		
+		if (isFlash)
+		{
+			// pause the swf
+			var pauseParamNode = document.createElement("param");
+			pauseParamNode.setAttribute("name", "play");
+			pauseParamNode.setAttribute("value", "false");
+			swf.appendChild(pauseParamNode);
+			
+			// hide the swf
+			swf.style.visibility = "hidden";
+		}
+
+		// do some debug logging
+		var debugText = $('#swfDebug').text();
+		if (debugText) {
+			console.log(debugText);
+		}
 		
 		var filename = swf_jquery.attr('data');
 		filename = filename.substring(filename.lastIndexOf('/') + 1);
@@ -145,7 +155,6 @@ function queueRefresh()
 			// Set up a timer to periodically check value of PercentLoaded
 			var loadCheckInterval = setInterval(function (){
 				
-				
 				// Ensure Flash Player's PercentLoaded method is available and returns a value
 				if(typeof swf.PercentLoaded !== "undefined" && swf.PercentLoaded())
 				{
@@ -155,7 +164,7 @@ function queueRefresh()
 						progressNode.setAttribute("value", swfPercent);
 					}
 					// Once value == 100 (fully loaded) we can do whatever we want
-					if (id != initialTimeoutID)
+					if (queuedSwfNumber != swfNumber) // if we're invalid
 					{
 						clearInterval(loadCheckInterval);
 					}
@@ -168,11 +177,16 @@ function queueRefresh()
 						
 						var endTransition = function()
 						{
-							swf.style.visibility = "initial";
-							swf.Play(); // Play the SWF
-							if (progressNode)
+							if (queuedSwfNumber == swfNumber) // if we're still valid
 							{
-								container.removeChild(progressNode);
+								swf.style.visibility = "initial";
+								swf.Play(); // Play the SWF
+								if (progressNode)
+								{
+									container.removeChild(progressNode);
+								}
+								// Execute function
+								onObjectLoaded(swf_jquery, queuedSwfNumber);
 							}
 						}
 						
@@ -187,9 +201,6 @@ function queueRefresh()
 							// no transition
 							endTransition();
 						}
-						
-						// Execute function
-						onObjectLoaded(swf_jquery);
 					}
 					else
 					{
@@ -211,14 +222,14 @@ function queueRefresh()
 				}
 				else
 				{
-					console.log("0% loaded");
+					clearInterval(loadCheckInterval);
 				}
 			}, 100);
 		}
 		else
 		{
 			// not a swf, so skip the loading polling
-			onObjectLoaded(swf_jquery);
+			onObjectLoaded(swf_jquery, queuedSwfNumber);
 		}
 	}, 200);
 }
