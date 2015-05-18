@@ -172,16 +172,14 @@ function queueRefresh()
 						}
 						
 						// if we took a while to load
-						if (timeDoneLoading - timeLoaded > 1000)
+						if (progressNode && timeDoneLoading - timeLoaded > 1000)
 						{
 							// fade out the progress bar
-							console.log("fading out");
 							$("#swfProgress").fadeOut(500, endTransition);
 						}
 						else // we loaded really fast
 						{
 							// no transition
-							console.log("skipping transition");
 							endTransition();
 						}
 						
