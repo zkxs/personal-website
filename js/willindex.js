@@ -149,7 +149,6 @@ function queueRefresh()
 					{
 						progressNode.setAttribute("value", swfPercent);
 					}
-					console.log(swfPercent + "% loaded");
 					// Once value == 100 (fully loaded) we can do whatever we want
 					if (id != initialTimeoutID)
 					{
