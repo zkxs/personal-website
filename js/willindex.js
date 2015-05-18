@@ -50,26 +50,18 @@ function onNextButtonClick()
 	return false; // cancel normal html link navigation
 }
 
-function onObjectLoaded(swf, queuedSwfNumber)
+function onObjectLoaded(swf)
 {
-	// make sure this call originated from the swf that is currently loaded
-	if (queuedSwfNumber == swfNumber)
+	var time = parseFloat(swf.attr('time')); // time in seconds 
+	if (time > 10)
 	{
-		var time = parseFloat(swf.attr('time')); // time in seconds 
-		if (time > 10)
-		{
-			timeoutID = setTimeout(loadNextSwf, Math.floor(1000 * parseFloat(time)));
-			console.log("Refresh queued in " + time + " seconds");
-		}
-		else
-		{
-			timeoutID = setTimeout(loadNextSwf, 60000);
-			console.log("Refresh queued in 60 seconds (object loops)");
-		}
+		timeoutID = setTimeout(loadNextSwf, Math.floor(1000 * parseFloat(time)));
+		console.log("Refresh queued in " + time + " seconds");
 	}
 	else
 	{
-		console.log("old queued refresh is no longer valid");
+		timeoutID = setTimeout(loadNextSwf, 60000);
+		console.log("Refresh queued in 60 seconds (object loops)");
 	}
 }
 
@@ -94,11 +86,11 @@ function loadNextSwf(requested)
 		if (requested)
 		{
 			$('#swfSlot').load('/php/randomwillswf.php?swf=' 
-					+ requested, queueRefresh(swfNumber)); // should already be urlencoded
+					+ requested);//, queueRefresh(swfNumber)); // should already be urlencoded
 		}
 		else
 		{
-			$('#swfSlot').load('/php/randomwillswf.php', queueRefresh(swfNumber));
+			$('#swfSlot').load('/php/randomwillswf.php');//, queueRefresh(swfNumber));
 		}
 	}
 	else
@@ -121,13 +113,13 @@ function ohHashChange()
 }
 
 // called after the current swf is done loading
-function queueRefresh(queuedSwfNumber)
+function queueRefresh(filename)
 {
 	timeLoaded = Date.now();
 	
 	// because jQuery is shit even though the callback has been called, it will take a while for the object to be added to the DOM
 
-	var initialTimeoutID = setInterval(function (){
+	//var initialTimeoutID = setInterval(function (){
 	
 		// get the elements we're going to be working with
 		var swf = document.randomSWF;
@@ -168,8 +160,6 @@ function queueRefresh(queuedSwfNumber)
 			$('#swfDebug').show();
 		}
 		
-		var filename = swf_jquery.attr('data');
-		filename = filename.substring(filename.lastIndexOf('/') + 1);
 		currentFilename = filename;
 		location.hash = '#' + filename; // might need to be urlencoded
 		
@@ -193,7 +183,7 @@ function queueRefresh(queuedSwfNumber)
 						progressNode.setAttribute("value", swfPercent);
 					}
 					// Once value == 100 (fully loaded) we can do whatever we want
-					if (queuedSwfNumber != swfNumber) // if we're invalid
+					if (currentFilename != filename) // if we're invalid
 					{
 						clearInterval(loadCheckInterval);
 					}
@@ -206,7 +196,7 @@ function queueRefresh(queuedSwfNumber)
 						
 						var endTransition = function()
 						{
-							if (queuedSwfNumber == swfNumber) // if we're still valid
+							if (currentFilename == filename) // if we're still valid
 							{
 								swf.style.visibility = "initial";
 								swf.Play(); // Play the SWF
@@ -215,7 +205,7 @@ function queueRefresh(queuedSwfNumber)
 									container.removeChild(progressNode);
 								}
 								// Execute function
-								onObjectLoaded(swf_jquery, queuedSwfNumber);
+								onObjectLoaded(swf_jquery);
 							}
 						}
 						
@@ -258,9 +248,10 @@ function queueRefresh(queuedSwfNumber)
 		else
 		{
 			// not a swf, so skip the loading polling
-			onObjectLoaded(swf_jquery, queuedSwfNumber);
+			console.log("not flash");
+			onObjectLoaded(swf_jquery);
 		}
-	}, 1);
+	//}, 1);
 }
 
 var pausedCheckbox = $('#pausedcheckbox')

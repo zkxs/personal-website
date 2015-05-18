@@ -44,7 +44,7 @@
 		$swf->loadswf($filepathLocal);
 		
 		$fps = (float)($swf->fps[1] . "." . $swf->fps[0]);
-		$swfLength = $swf->frames / $fps; // this is a float TODO: is this safe?
+		$swfLength = $swf->frames / $fps; // this is a float
 	}
 	
 	// upscale small swfs
@@ -92,6 +92,14 @@
 							height="<?=$height?>">
 								Object <a href="<?=$filepath?>"><?=$filename?></a> failed to display. No appropriate plugin was found.
 						</object>
+						<script type="text/javascript">
+							var swf = document.randomSWF;
+							if (!swf)
+							{
+								console.log("this should not happen");
+							}
+							queueRefresh('<?=$filename?>');
+						</script>
 					</div>
 					
 					<?php if($diaz): ?>
