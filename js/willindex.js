@@ -3,7 +3,14 @@ if (!Date.now) {
 	Date.now = function() { return new Date().getTime(); }
 }
 
+
+
 var debugging = false;
+var cookieName = "willswfs";
+var separator1 = ':';
+var separator2 = '!';
+var seenExpiry   = 1000 * 60 * 60 * 24 * 7;   // 1 week (in ms)
+var cookieExpiry =        60 * 60 * 24 * 365; // 1 year (in s)
 var currentSWF = null;
 var swfNumber = 0; // the number of the SWF we are currently on (0 if none loaded yet)
 var timeoutID;
@@ -135,8 +142,57 @@ function queueRefresh(filename)
 		swf.StopPlay();
 	}
 	
-	document.cookie = "first=" + "wat";
-	document.cookie = "last=" + filename;
+	var cookie = docCookies.getItem(cookieName);
+	var seenByName = {};
+	seenByName[filename] = timeLoaded;
+	var newCookie = "";
+	if (cookie)
+	{
+		var splitCookie = cookie.split(separator1);
+		for (var i in splitCookie)
+		{
+			var splitPair = splitCookie[i].split(separator2);
+			var file = splitPair[0];
+			var timestamp = parseInt(splitPair[1]);
+			
+			if (timeLoaded - timestamp <= seenExpiry) // discard old views
+			{
+				if (Object.prototype.hasOwnProperty.call(seenByName, file))
+				{
+					if (timestamp > seenByName[file])
+					{
+						seenByName[file] = timestamp;
+					}
+				}
+				else
+				{
+					seenByName[file] = timestamp;
+				}
+			}
+		}
+	}
+	var seenByTime = [];
+	var times = [];
+	var ii = 0;
+	for (var name in seenByName)
+	{
+		times[ii++] = seenByName[name];
+		seenByTime[seenByName[name]] = name;
+	}
+	seenByName = null;
+	times.sort(function(a, b){return b - a;});
+	var newCookie = "";
+	for (var i = 0; i < times.length; i++)
+	{
+		var time = times[i];
+		newCookie += seenByTime[time] + "!" + time;
+		if (i < times.length - 1)
+		{
+			newCookie += ":";
+		}
+	}
+	//console.log(newCookie);
+	docCookies.setItem(cookieName, newCookie, cookieExpiry);
 	
 	var slot = document.getElementById("swfSlot");
 	var container = document.getElementById("swfContainer");

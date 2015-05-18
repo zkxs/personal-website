@@ -1,7 +1,7 @@
 <?php
 	require ("swfheader.class.php");
 	
-	function random_pic($dir)
+	function random_pic($dir, $seen)
 	{
 		$files = glob($dir . '/*.*');
 		
@@ -13,13 +13,49 @@
 			}
 		}
 		
+		$numFiles = count($files);
+		
+		foreach ($seen as $seenfile)
+		{
+			if ($numFiles <= 1)
+			{
+				break;
+			}
+			else
+			{
+				$index = array_search($dir . '/' . $seenfile['name'], $files);
+				if ( $index !== false)
+				{
+					unset($files[$index]);
+					//echo "unset ".$seenfile['name']."\n";
+				}
+				else
+				{
+					//echo $dir . '/' . $seenfile['name'] . "not found\n";
+				}
+				$numFiles -= 1;
+			}
+		}
+		
 		$file = array_rand($files);
 		return $files[$file];
 	}
 	
 	$debugPrint = true;
 	
-	$filepathLocal = random_pic($_SERVER['DOCUMENT_ROOT'].'/img/will');
+	$cookie = $_COOKIE['willswfs'];
+	$seen = [];
+	if (!empty($cookie))
+	{
+		$seen = explode(':', $cookie);
+	}
+	
+	for($i = 0, $size = count($seen); $i < $size; ++$i) {
+		$split_pair = explode('!', $seen[$i]);
+		$seen[$i] = ['name' => $split_pair[0], 'time' => $split_pair[1]];
+	}
+	
+	$filepathLocal = random_pic($_SERVER['DOCUMENT_ROOT'].'/img/will', $seen);
 	$filepath = str_replace($_SERVER['DOCUMENT_ROOT'], "", $filepathLocal);
 	$filename = preg_replace("/.*\//", "", $filepath);
 	$filenameNoExt = preg_replace("/\.[a-zA-Z0-9]{1,4}$/", "", $filename);
