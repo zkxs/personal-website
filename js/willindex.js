@@ -110,16 +110,21 @@ function queueRefresh()
 	var slot = document.getElementById("swfSlot");
 	var container = document.getElementById("swfContainer");
 	var swf = document.randomSWF;
+	var swf_jquery = $('#randomSWF');
+	var isFlash = swf_jquery.attr('type') === "application/x-shockwave-flash";
 	var progressNode = null; // might never come into being
 	
-	// pause the swf
-	var pauseParamNode = document.createElement("param");
-	pauseParamNode.setAttribute("name", "play");
-	pauseParamNode.setAttribute("value", "false");
-	swf.appendChild(pauseParamNode);
-	
-	// hide the swf
-	swf.style.visibility = "hidden";
+	if (isFlash)
+	{
+		// pause the swf
+		var pauseParamNode = document.createElement("param");
+		pauseParamNode.setAttribute("name", "play");
+		pauseParamNode.setAttribute("value", "false");
+		swf.appendChild(pauseParamNode);
+		
+		// hide the swf
+		swf.style.visibility = "hidden";
+	}
 
 	// do some debug logging
 	var debugText = $('#swfDebug').text();
@@ -130,12 +135,12 @@ function queueRefresh()
 	
 	var id = initialTimeoutID = setTimeout(function (){
 	
-		var swf_jquery = $('#randomSWF');
+		
 		var filename = swf_jquery.attr('data');
 		filename = filename.substring(filename.lastIndexOf('/') + 1);
 		currentFilename = filename;
 		location.hash = '#' + filename; // might need to be urlencoded
-		if (swf_jquery.attr('type') === "application/x-shockwave-flash")
+		if (isFlash)
 		{
 			// Set up a timer to periodically check value of PercentLoaded
 			var loadCheckInterval = setInterval(function (){
@@ -213,7 +218,7 @@ function queueRefresh()
 		else
 		{
 			// not a swf, so skip the loading polling
-			onObjectLoaded(swf);
+			onObjectLoaded(swf_jquery);
 		}
 	}, 200);
 }
