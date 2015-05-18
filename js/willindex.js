@@ -110,7 +110,7 @@ function queueRefresh()
 	var slot = document.getElementById("swfSlot");
 	var container = document.getElementById("swfContainer");
 	var swf = document.randomSWF;
-	var progressNode; // might never come into being
+	var progressNode = null; // might never come into being
 	
 	// pause the swf
 	var pauseParamNode = document.createElement("param");
@@ -175,11 +175,13 @@ function queueRefresh()
 						if (timeDoneLoading - timeLoaded > 1000)
 						{
 							// fade out the progress bar
+							console.log("fading out");
 							$("#swfProgress").fadeOut(500, endTransition);
 						}
 						else // we loaded really fast
 						{
 							// no transition
+							console.log("skipping transition");
 							endTransition();
 						}
 						
