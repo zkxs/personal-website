@@ -110,7 +110,7 @@ function queueRefresh()
 	var node = document.createElement("param");
 	node.setAttribute("name", "play");
 	node.setAttribute("value", "false");
-	//document.randomSWF.appendChild(node);
+	document.randomSWF.appendChild(node);
 
 	// do some debug logging
 	var debugText = $('#swfDebug').text();
@@ -128,26 +128,29 @@ function queueRefresh()
 		location.hash = '#' + filename; // might need to be urlencoded
 		if (swf.attr('type') === "application/x-shockwave-flash")
 		{
-			//Set up a timer to periodically check value of PercentLoaded
+			// Set up a timer to periodically check value of PercentLoaded
 			var loadCheckInterval = setInterval(function (){
 				
 				
-				//Ensure Flash Player's PercentLoaded method is available and returns a value
+				// Ensure Flash Player's PercentLoaded method is available and returns a value
 				if(typeof document.randomSWF.PercentLoaded !== "undefined" && document.randomSWF.PercentLoaded())
 				{
 					var swfPercent = document.randomSWF.PercentLoaded();
 					console.log(swfPercent + "% loaded");
-					//Once value == 100 (fully loaded) we can do whatever we want
+					// Once value == 100 (fully loaded) we can do whatever we want
 					if (id != initialTimeoutID)
 					{
 						clearInterval(loadCheckInterval);
 					}
 					else if(swfPercent >= 100) // it has probably started playing
 					{
-						//Clear timer
+						// Clear timer
 						clearInterval(loadCheckInterval);
 						
-						//Execute function
+						// Play the SWF
+						document.randomSWF.Play();
+						
+						// Execute function
 						onObjectLoaded(swf);
 					}
 				}
