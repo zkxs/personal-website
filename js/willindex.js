@@ -9,8 +9,8 @@ var debugging = false;
 var cookieName = "willswfs";
 var separator1 = ':';
 var separator2 = '!';
-var seenExpiry   = 1000 * 60 * 60 * 24 * 7;   // 1 week (in ms)
-var cookieExpiry =        60 * 60 * 24 * 365; // 1 year (in s)
+var seenExpiry   = 1000 * 60 * 60 * 6;        // 6 hours (in ms)
+var cookieExpiry =        60 * 60 * 24 * 365; // 1 year  (in s)
 var currentSWF = null;
 var swfNumber = 0; // the number of the SWF we are currently on (0 if none loaded yet)
 var timeoutID;
