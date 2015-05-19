@@ -131,7 +131,37 @@ function ohHashChange()
 // magically called after the current swf is done loading
 function queueRefresh(filename)
 {
-	timeLoaded = Date.now();
+	var timeLoadedLocal = Date.now();
+	
+	console.log("loaded " + filename);
+	if (debugging)
+	{
+		// do some debug logging
+		var debugText = $('#swfDebug').text();
+		if (debugText) {
+			//console.log("DEBUG INFO:\n" + debugText);
+			$('#swfDebug').show();
+		}
+	}
+	
+	if (!timeLoaded)
+	{
+		console.log("setting timeLoaded for the fist time " + timeLoadedLocal);
+		timeLoaded = timeLoadedLocal;
+	}
+	else if (timeLoadedLocal > timeLoaded)
+	{
+		console.log("updating timeLoaded to newer value " + timeLoadedLocal);
+		timeLoaded = timeLoadedLocal;
+	}
+	else
+	{
+		// somehow this call happened after a more recent call
+		console.log("this queueRefresh() happened after a more recent queueRefresh()");
+		return;
+	}
+	
+	updateCookie(timeLoaded, filename);
 
 	// get the elements we're going to be working with
 	var swf = document.randomSWF;
@@ -141,58 +171,6 @@ function queueRefresh(filename)
 	{
 		swf.StopPlay();
 	}
-	
-	var cookie = docCookies.getItem(cookieName);
-	var seenByName = {};
-	seenByName[filename] = timeLoaded;
-	var newCookie = "";
-	if (cookie)
-	{
-		var splitCookie = cookie.split(separator1);
-		for (var i in splitCookie)
-		{
-			var splitPair = splitCookie[i].split(separator2);
-			var file = splitPair[0];
-			var timestamp = parseInt(splitPair[1]);
-			
-			if (timeLoaded - timestamp <= seenExpiry) // discard old views
-			{
-				if (Object.prototype.hasOwnProperty.call(seenByName, file))
-				{
-					if (timestamp > seenByName[file])
-					{
-						seenByName[file] = timestamp;
-					}
-				}
-				else
-				{
-					seenByName[file] = timestamp;
-				}
-			}
-		}
-	}
-	var seenByTime = [];
-	var times = [];
-	var ii = 0;
-	for (var name in seenByName)
-	{
-		times[ii++] = seenByName[name];
-		seenByTime[seenByName[name]] = name;
-	}
-	seenByName = null;
-	times.sort(function(a, b){return b - a;});
-	var newCookie = "";
-	for (var i = 0; i < times.length; i++)
-	{
-		var time = times[i];
-		newCookie += seenByTime[time] + "!" + time;
-		if (i < times.length - 1)
-		{
-			newCookie += ":";
-		}
-	}
-	//console.log(newCookie);
-	docCookies.setItem(cookieName, newCookie, cookieExpiry);
 	
 	var slot = document.getElementById("swfSlot");
 	var container = document.getElementById("swfContainer");
@@ -204,22 +182,9 @@ function queueRefresh(filename)
 		// hide the swf
 		swf.style.visibility = "hidden";
 	}
-
-	// do some debug logging
-	var debugText = $('#swfDebug').text();
-	if (debugging && debugText) {
-		console.log("DEBUG INFO:\n" + debugText);
-		$('#swfDebug').show();
-	}
 	
 	currentFilename = filename;
 	location.hash = '#' + filename; // might need to be urlencoded
-	
-	// if we are debugging we already have this and more logged
-	if (!debugging)
-	{
-		console.log("loading " + filename);
-	}
 	
 	if (isFlash)
 	{
@@ -235,8 +200,9 @@ function queueRefresh(filename)
 					progressNode.setAttribute("value", swfPercent);
 				}
 				// Once value == 100 (fully loaded) we can do whatever we want
-				if (currentFilename != filename) // if we're invalid
+				if (timeLoaded != timeLoadedLocal) // if we're invalid
 				{
+					console.log("invalid 1");
 					clearInterval(loadCheckInterval);
 				}
 				else if(swfPercent >= 100) // it has probably started playing
@@ -248,7 +214,7 @@ function queueRefresh(filename)
 					
 					var endTransition = function()
 					{
-						if (currentFilename == filename) // if we're still valid
+						if (timeLoaded == timeLoadedLocal) // if we're still valid
 						{
 							swf.style.visibility = "initial";
 							swf.Play(); // Play the SWF
@@ -258,6 +224,10 @@ function queueRefresh(filename)
 							}
 							// Execute function
 							onObjectLoaded(swf_jquery);
+						}
+						else
+						{
+							console.log("invalid 2");
 						}
 					}
 					
@@ -305,12 +275,88 @@ function queueRefresh(filename)
 	}
 }
 
+function updateCookie(timeLoadedLocal, filename)
+{
+	var cookie = docCookies.getItem(cookieName);
+	var seenByName = {};
+	if (filename)
+	{
+		//console.log("adding " + filename + " to cookie");
+		seenByName[filename] = timeLoadedLocal;
+	}
+	var newCookie = "";
+	if (cookie)
+	{
+		var splitCookie = cookie.split(separator1);
+		for (var i in splitCookie)
+		{
+			var splitPair = splitCookie[i].split(separator2);
+			var file = splitPair[0];
+			var timestamp = parseInt(splitPair[1]);
+			
+			if (timeLoadedLocal - timestamp <= seenExpiry) // discard old views
+			{
+				if (Object.prototype.hasOwnProperty.call(seenByName, file))
+				{
+					if (timestamp > seenByName[file])
+					{
+						seenByName[file] = timestamp;
+					}
+				}
+				else
+				{
+					seenByName[file] = timestamp;
+				}
+			}
+		}
+	}
+	var seenByTime = [];
+	var times = [];
+	var ii = 0;
+	for (var name in seenByName)
+	{
+		times[ii++] = seenByName[name];
+		seenByTime[seenByName[name]] = name;
+	}
+	seenByName = null;
+	times.sort(function(a, b){return b - a;});
+	var newCookie = "";
+	for (var i = 0; i < times.length; i++)
+	{
+		var time = times[i];
+		newCookie += seenByTime[time] + "!" + time;
+		if (i < times.length - 1)
+		{
+			newCookie += ":";
+		}
+	}
+	//console.log(newCookie);
+	//console.log(newCookie.length);
+	
+	var output = new OutStream();
+	var compressor = new LZWCompressor(output);
+	compressor.compress(newCookie);
+	//console.log(output.bytestream);
+	//console.log(output.bytestream.length);
+	
+	docCookies.setItem(cookieName, newCookie, cookieExpiry);
+	cookie = docCookies.getItem(cookieName);
+	
+	if (filename && newCookie !== cookie)
+	{
+		console.log(filename + " may not have been added to the cookie");
+	}
+}
+
 var pausedCheckbox = $('#pausedcheckbox')
 pausedCheckbox.removeAttr("checked");
 pausedCheckbox.removeAttr("disabled");
 pausedCheckbox.change(onPauseChange);
 $('#nextbutton').click(onNextButtonClick);
 $(window).on('hashchange', ohHashChange);
+
+// update the cookie
+updateCookie(Date.now());
 
 // load the initial swf
 if (location.hash)

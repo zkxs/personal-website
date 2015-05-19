@@ -12,6 +12,7 @@
 		<![endif]-->
 		<script src="/js/jquery.min.js"></script>
 		<script src="/js/cookies.js"></script>
+		<script src="/js/lzwjs.js"></script>
 		<style>
 			h2 > a:link, h2 > a:visited {
 				color: #D4D4D4;

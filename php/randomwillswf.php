@@ -1,6 +1,14 @@
 <?php
 	require ("swfheader.class.php");
 	
+	$errorLog = [];
+	
+	function errlog($message)
+	{
+		global $errorLog;
+		array_push($errorLog, $message);
+	}
+	
 	function random_pic($dir, $seen)
 	{
 		$files = glob($dir . '/*.*');
@@ -27,21 +35,25 @@
 				if ( $index !== false)
 				{
 					unset($files[$index]);
-					//echo "unset ".$seenfile['name']."\n";
+					//errlog("unset " . $seenfile['name']);
 				}
 				else
 				{
-					//echo $dir . '/' . $seenfile['name'] . "not found\n";
+					errlog($dir . '/' . $seenfile['name'] . "not found");
 				}
 				$numFiles -= 1;
 			}
 		}
+		
+		//errlog("files remaining: " . $numFiles);
 		
 		$file = array_rand($files);
 		return $files[$file];
 	}
 	
 	$debugPrint = true;
+	
+	
 	
 	$cookie = $_COOKIE['willswfs'];
 	$seen = [];
@@ -150,7 +162,8 @@
 					
 <pre id="swfDebug" style="display: none;">
 <?php
-	if ($debugPrint) {
+	if ($debugPrint)
+	{
 		echo '$filepath = ';
 		echo $filepath . "\n";
 		
@@ -167,3 +180,14 @@
 	}
 ?>
 </pre>
+
+<?php if(count($errorLog) > 0): ?>
+<pre id="errorlog">
+<?php
+		foreach ($errorLog as $message)
+		{
+			echo $message . "\n";
+		}
+?>
+</pre>
+<?php endif; ?>
