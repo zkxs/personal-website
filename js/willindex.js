@@ -371,18 +371,26 @@ function updateCookie(timeLoadedLocal, filename)
 	//console.log(newCookie);
 	//console.log(newCookie.length);
 	
-	var output = new OutStream();
-	var compressor = new LZWCompressor(output);
-	compressor.compress(newCookie);
+	//var output = new OutStream();
+	//var compressor = new LZWCompressor(output);
+	//compressor.compress(newCookie);
 	//console.log(output.bytestream);
 	//console.log(output.bytestream.length);
 	
-	docCookies.setItem(cookieName, newCookie, cookieExpiry);
-	cookie = docCookies.getItem(cookieName);
-	
-	if (filename && newCookie !== cookie)
+	if (newCookie)
 	{
-		console.log(filename + " may not have been added to the cookie");
+		docCookies.setItem(cookieName, newCookie, cookieExpiry);
+		cookie = docCookies.getItem(cookieName);
+		
+		if (filename && newCookie !== cookie)
+		{
+			console.log(filename + " may not have been added to the cookie");
+		}
+	}
+	else
+	{
+		docCookies.removeItem(cookieName);
+		console.log("Removed cookie");
 	}
 }
 
