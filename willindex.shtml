@@ -57,6 +57,20 @@
 			a.button:hover {
 				background-color: #444444;
 			}
+			#errorlog {
+				color: #FF4444;
+			}
+			#errorhead {
+				color: #FF4444;
+			}
+			h3 {
+				font-family: monospace;
+				margin-bottom: 5px;
+				font-size: 1.8em;
+			}
+			pre {
+				margin-top: 0px;
+			}
 		</style>
 	</head>
 	<body>

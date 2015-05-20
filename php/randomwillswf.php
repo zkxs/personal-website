@@ -16,8 +16,13 @@
 		if (!empty($_GET['swf'])) {
 			$requested = $_GET['swf'];
 			$requestedFile = $dir . '/' . $requested;
-			if (file_exists($requestedFile )) {
+			if (file_exists($requestedFile))
+			{
 				return $requestedFile;
+			}
+			else
+			{
+				errlog('"' . $requested . '" was not found. Loading a random file.');
 			}
 		}
 		
@@ -39,7 +44,7 @@
 				}
 				else
 				{
-					errlog($dir . '/' . $seenfile['name'] . "not found");
+					errlog('File "' . $seenfile['name'] . '" referenced in cookie is not valid.');
 				}
 				$numFiles -= 1;
 			}
@@ -52,8 +57,6 @@
 	}
 	
 	$debugPrint = true;
-	
-	
 	
 	$cookie = $_COOKIE['willswfs'];
 	$seen = [];
@@ -159,8 +162,21 @@
 		Your browser does not support the <code>audio</code> element.
 	</audio>
 <?php endif; ?>
-					
-<pre id="swfDebug" style="display: none;">
+
+<?php if(count($errorLog) > 0): ?>
+<h3 id="errorhead">Errors have occured:</h3>
+<pre id="errorlog">
+<?php
+		foreach ($errorLog as $message)
+		{
+			echo $message . "\n";
+		}
+?>
+</pre>
+<?php endif; ?>
+
+<h3 id="debughead" style="display: none">Debugging Information:</h3>
+<pre id="swfDebug" style="display: none">
 <?php
 	if ($debugPrint)
 	{
@@ -180,14 +196,3 @@
 	}
 ?>
 </pre>
-
-<?php if(count($errorLog) > 0): ?>
-<pre id="errorlog">
-<?php
-		foreach ($errorLog as $message)
-		{
-			echo $message . "\n";
-		}
-?>
-</pre>
-<?php endif; ?>

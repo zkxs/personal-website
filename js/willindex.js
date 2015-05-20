@@ -19,11 +19,40 @@ var finished = false;
 var ignoreUnpause = false;
 var timeLoaded;
 
-function debug()
+function debug(toDebug)
 {
-	debugging = true;
-	$('#swfDebug').show();
-	return "You are now a developer!";
+	if (toDebug === false)
+	{
+		if (debugging != false)
+		{
+			debugging = false;
+			$('#debughead').hide();
+			$('#swfDebug').hide();
+			return "I GUESS IT WAS TOO MUCH FOR YOU!";
+		}
+		else
+		{
+			return "...and stay out!";
+		}
+	}
+	else if (toDebug === true || toDebug === undefined)
+	{
+		if (debugging != true)
+		{
+			debugging = true;
+			$('#debughead').show();
+			$('#swfDebug').show();
+			return "You are now a developer!";
+		}
+		else
+		{
+			return "You are already a developer!";
+		}
+	}
+	else
+	{
+		return "What are you playing at?";
+	}
 }
 
 function paused()
@@ -140,6 +169,7 @@ function queueRefresh(filename)
 		var debugText = $('#swfDebug').text();
 		if (debugText) {
 			//console.log("DEBUG INFO:\n" + debugText);
+			$('#debughead').show();
 			$('#swfDebug').show();
 		}
 	}
@@ -181,6 +211,19 @@ function queueRefresh(filename)
 	var container_jquery = $("#swfContainer");
 	var swf_jquery = $('#randomSWF');
 	var progressNode = null; // might never come into being
+	
+	var thingsToAlign = ["errorhead", "errorlog", "swfDebug", "debughead"];
+	for (var i in thingsToAlign)
+	{
+		var node = document.getElementById(thingsToAlign[i]);
+		if (node)
+		{
+			node.style.marginLeft = "auto";
+			node.style.marginRight = "auto";
+			node.style.width = swf.width + "px";
+		}
+	}
+	
 	
 	currentFilename = filename;
 	location.hash = '#' + filename; // might need to be urlencoded
@@ -315,11 +358,12 @@ function updateCookie(timeLoadedLocal, filename)
 	seenByName = null;
 	times.sort(function(a, b){return b - a;});
 	var newCookie = "";
-	for (var i = 0; i < Math.min(times.length, 50); i++)
+	var end = Math.min(times.length, 50);
+	for (var i = 0; i < end; i++)
 	{
 		var time = times[i];
 		newCookie += seenByTime[time] + "!" + time;
-		if (i < times.length - 1)
+		if (i < end - 1)
 		{
 			newCookie += ":";
 		}
