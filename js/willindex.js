@@ -235,7 +235,7 @@ function queueRefresh(filename)
 				if (progressNode && timeDoneLoading - timeLoaded > 1000)
 				{
 					// fade out the progress bar
-					$("#swfProgress").fadeOut(300, endTransition);
+					$("#swfProgress").fadeOut(250, endTransition);
 				}
 				else // we loaded really fast
 				{
@@ -315,7 +315,7 @@ function updateCookie(timeLoadedLocal, filename)
 	seenByName = null;
 	times.sort(function(a, b){return b - a;});
 	var newCookie = "";
-	for (var i = 0; i < times.length; i++)
+	for (var i = 0; i < Math.min(times.length, 50); i++)
 	{
 		var time = times[i];
 		newCookie += seenByTime[time] + "!" + time;
