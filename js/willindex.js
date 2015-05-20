@@ -133,7 +133,7 @@ function queueRefresh(filename)
 {
 	var timeLoadedLocal = Date.now();
 	
-	console.log("loaded " + filename);
+	console.log("loading " + filename);
 	if (debugging)
 	{
 		// do some debug logging
@@ -169,19 +169,18 @@ function queueRefresh(filename)
 	
 	if (isFlash = swf.StopPlay)
 	{
+		// pause the swf
 		swf.StopPlay();
+		
+		// hide the swf
+		swf.style.visibility = "hidden";
 	}
 	
 	var slot = document.getElementById("swfSlot");
 	var container = document.getElementById("swfContainer");
+	var container_jquery = $("#swfContainer");
 	var swf_jquery = $('#randomSWF');
 	var progressNode = null; // might never come into being
-	
-	if (isFlash)
-	{	
-		// hide the swf
-		swf.style.visibility = "hidden";
-	}
 	
 	currentFilename = filename;
 	location.hash = '#' + filename; // might need to be urlencoded
@@ -191,79 +190,74 @@ function queueRefresh(filename)
 		// Set up a timer to periodically check value of PercentLoaded
 		var loadCheckInterval = setInterval(function (){
 			
-			// Ensure Flash Player's PercentLoaded method is available and returns a value
-			if(typeof swf.PercentLoaded !== "undefined" && swf.PercentLoaded())
+			var swfPercent = swf.PercentLoaded();
+			if (progressNode)
 			{
-				var swfPercent = swf.PercentLoaded();
-				if (progressNode)
-				{
-					progressNode.setAttribute("value", swfPercent);
-				}
-				// Once value == 100 (fully loaded) we can do whatever we want
-				if (timeLoaded != timeLoadedLocal) // if we're invalid
-				{
-					console.log("invalid 1");
-					clearInterval(loadCheckInterval);
-				}
-				else if(swfPercent >= 100) // it has probably started playing
-				{
-					var timeDoneLoading = Date.now();
-					
-					// Clear timer
-					clearInterval(loadCheckInterval);
-					
-					var endTransition = function()
-					{
-						if (timeLoaded == timeLoadedLocal) // if we're still valid
-						{
-							swf.style.visibility = "initial";
-							swf.Play(); // Play the SWF
-							if (progressNode)
-							{
-								container.removeChild(progressNode);
-							}
-							// Execute function
-							onObjectLoaded(swf_jquery);
-						}
-						else
-						{
-							console.log("invalid 2");
-						}
-					}
-					
-					// if we took a while to load
-					if (progressNode && timeDoneLoading - timeLoaded > 1000)
-					{
-						// fade out the progress bar
-						$("#swfProgress").fadeOut(500, endTransition);
-					}
-					else // we loaded really fast
-					{
-						// no transition
-						endTransition();
-					}
-				}
-				else
-				{
-					// add the progress bar
-					if (!progressNode)
-					{
-						container.style.position = "relative";
-						progressNode = document.createElement("progress");
-						progressNode.id = "swfProgress";
-						progressNode.setAttribute("value", swfPercent);
-						progressNode.setAttribute("max", 100);
-						progressNode.style.position = "absolute";
-						progressNode.style.left = "50%";
-						progressNode.style.top = "50%";
-						progressNode.style.transform = "translate(-50%, -50%)";
-						container.appendChild(progressNode);
-					}
-				}
+				progressNode.setAttribute("value", swfPercent);
 			}
-			else
+			// Once value == 100 (fully loaded) we can do whatever we want
+			if (timeLoaded != timeLoadedLocal) // if we're invalid
 			{
+				console.log("invalid during load");
 				clearInterval(loadCheckInterval);
+			}
+			else if(swfPercent >= 100) // it has probably started playing
+			{
+				var timeDoneLoading = Date.now();
+				console.log("done loading " + filename);
+				
+				// Clear timer
+				clearInterval(loadCheckInterval);
+				
+				var endTransition = function()
+				{
+					if (timeLoaded == timeLoadedLocal) // if we're still valid
+					{
+						//container_jquery.hide();
+						swf.style.visibility = "initial";
+						swf.Play(); // Play the SWF
+						//container_jquery.fadeIn(500);
+						
+						if (progressNode)
+						{
+							container.removeChild(progressNode);
+						}
+						// Execute function
+						onObjectLoaded(swf_jquery);
+					}
+					else
+					{
+						console.log("invalid after load");
+					}
+				}
+				
+				// if we took a while to load
+				if (progressNode && timeDoneLoading - timeLoaded > 1000)
+				{
+					// fade out the progress bar
+					$("#swfProgress").fadeOut(300, endTransition);
+				}
+				else // we loaded really fast
+				{
+					// no transition
+					endTransition();
+				}
+			}       // if we've been loading a little bit and are not done, add the progress bar
+			else if (!progressNode && Date.now() - timeLoaded > 200) 
+			{
+				// add the progress bar
+				container.style.position = "relative";
+				progressNode = document.createElement("progress");
+				progressNode.id = "swfProgress";
+				progressNode.setAttribute("value", swfPercent);
+				progressNode.setAttribute("max", 100);
+				progressNode.style.position = "absolute";
+				progressNode.style.left = "50%";
+				progressNode.style.top = "50%";
+				progressNode.style.transform = "translate(-50%, -50%)";
+				progressNode.style.visibility = "hidden";
+				container.appendChild(progressNode);
+				$("#swfProgress").css('visibility','initial').hide().fadeIn(50);
 			}
 		}, 100);
 	}
