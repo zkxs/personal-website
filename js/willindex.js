@@ -233,74 +233,89 @@ function queueRefresh(filename)
 		// Set up a timer to periodically check value of PercentLoaded
 		var loadCheckInterval = setInterval(function (){
 			
-			var swfPercent = swf.PercentLoaded();
-			if (progressNode)
+			// Ensure Flash Player's PercentLoaded method is available
+			if (swf && typeof swf.PercentLoaded !== "undefined")
 			{
-				progressNode.setAttribute("value", swfPercent);
-			}
-			// Once value == 100 (fully loaded) we can do whatever we want
-			if (timeLoaded != timeLoadedLocal) // if we're invalid
-			{
-				console.log("invalid during load");
-				clearInterval(loadCheckInterval);
-			}
-			else if(swfPercent >= 100) // it has probably started playing
-			{
-				var timeDoneLoading = Date.now();
-				console.log("done loading " + filename);
-				
-				// Clear timer
-				clearInterval(loadCheckInterval);
-				
-				var endTransition = function()
+				var swfPercent = swf.PercentLoaded();
+				if (progressNode)
 				{
-					if (timeLoaded == timeLoadedLocal) // if we're still valid
+					progressNode.setAttribute("value", swfPercent);
+				}
+				// Once value == 100 (fully loaded) we can do whatever we want
+				if (timeLoaded != timeLoadedLocal) // if we're invalid
+				{
+					console.log("invalid during load");
+					clearInterval(loadCheckInterval);
+				}
+				else if(swfPercent >= 100) // it has probably started playing
+				{
+					var timeDoneLoading = Date.now();
+					console.log("done loading " + filename);
+					
+					// Clear timer
+					clearInterval(loadCheckInterval);
+					
+					var endTransition = function()
 					{
-						//container_jquery.hide();
-						swf.style.visibility = "initial";
-						swf.Play(); // Play the SWF
-						//container_jquery.fadeIn(500);
-						
-						if (progressNode)
+						if (timeLoaded == timeLoadedLocal) // if we're still valid
 						{
-							container.removeChild(progressNode);
+							//container_jquery.hide();
+							swf.style.visibility = "initial";
+							swf.Play(); // Play the SWF
+							//container_jquery.fadeIn(500);
+							
+							if (progressNode)
+							{
+								container.removeChild(progressNode);
+							}
+							// Execute function
+							onObjectLoaded(swf_jquery);
 						}
-						// Execute function
-						onObjectLoaded(swf_jquery);
+						else
+						{
+							console.log("invalid after load");
+						}
 					}
-					else
+					
+					// if we took a while to load
+					if (progressNode && timeDoneLoading - timeLoaded > 1000)
 					{
-						console.log("invalid after load");
+						// fade out the progress bar
+						$("#swfProgress").fadeOut(250, endTransition);
 					}
-				}
-				
-				// if we took a while to load
-				if (progressNode && timeDoneLoading - timeLoaded > 1000)
+					else // we loaded really fast
+					{
+						// no transition
+						endTransition();
+					}
+				}       // if we've been loading a little bit and are not done, add the progress bar
+				else if (!progressNode && Date.now() - timeLoaded > 200) 
 				{
-					// fade out the progress bar
-					$("#swfProgress").fadeOut(250, endTransition);
+					// add the progress bar
+					container.style.position = "relative";
+					progressNode = document.createElement("progress");
+					progressNode.id = "swfProgress";
+					progressNode.setAttribute("value", swfPercent);
+					progressNode.setAttribute("max", 100);
+					progressNode.style.position = "absolute";
+					progressNode.style.left = "50%";
+					progressNode.style.top = "50%";
+					progressNode.style.transform = "translate(-50%, -50%)";
+					progressNode.style.visibility = "hidden";
+					container.appendChild(progressNode);
+					$("#swfProgress").css('visibility','initial').hide().fadeIn(50);
 				}
-				else // we loaded really fast
-				{
-					// no transition
-					endTransition();
-				}
-			}       // if we've been loading a little bit and are not done, add the progress bar
-			else if (!progressNode && Date.now() - timeLoaded > 200) 
+			}
+			else
 			{
-				// add the progress bar
-				container.style.position = "relative";
-				progressNode = document.createElement("progress");
-				progressNode.id = "swfProgress";
-				progressNode.setAttribute("value", swfPercent);
-				progressNode.setAttribute("max", 100);
-				progressNode.style.position = "absolute";
-				progressNode.style.left = "50%";
-				progressNode.style.top = "50%";
-				progressNode.style.transform = "translate(-50%, -50%)";
-				progressNode.style.visibility = "hidden";
-				container.appendChild(progressNode);
-				$("#swfProgress").css('visibility','initial').hide().fadeIn(50);
+				if (timeLoaded != timeLoadedLocal) // if we're invalid
+				{
+					console.log("invalid due to swf object being undefined");
+					clearInterval(loadCheckInterval);
+				}
+				{
+					console.log(filename + " is not loaded yet");
+				}
 			}
 		}, 100);
 	}
