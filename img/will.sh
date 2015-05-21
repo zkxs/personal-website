@@ -54,7 +54,7 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 		
 		if [ $RESULT -ne 0 ]; then
 			if [ "$2" == "1" ]; then
-				echo "$FILENAME ($REALFILE) is not allowed"	
+				echo "$FILENAME ($REALFILE) is not allowed"
 			else
 				# this implies the rename failed because the file exists
 				"$SCRIPTPATH" printdupe "$REALFILE"
@@ -66,14 +66,15 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	}
 	
 	# Check for disallowed characters
-	check "[A-Z]"
+	check '[A-Z]'
 	check '\s'
-	check "__"
+	check '__'
 	check "'"
-	check "[)(!~;:]"
-	check "_-_"
-	check "[-_]{2,}"
-	check "nichijou-white"
+	check '[)(!~;:]'
+	check '_-_'
+	check '[-_]{2,}'
+	check 'nichijou-white'
+	check '(\.[a-z]+)\1+$'
 
 	# Check for disallowed files
 	check "iron[^a-z]*man" 1
@@ -87,7 +88,9 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	
 	if [ -e "../$FILENAME" ]; then
 		if [ "$(readlink -f "../$FILENAME")" != "$(readlink -f "$FILENAME")" ]; then 
-			echo "Prexisting file: $FILENAME"
+			# nobody cares
+			#echo "Prexisting file: $FILENAME"
+			:
 		fi
 	else
 		mv "$FILENAME" ..
@@ -104,6 +107,7 @@ elif [ "$1" == "operate" ]; then #2 is file
 		rename $@ 's/_-_/-/g' * # the _-_ sequence that sometimes happense after space replacement
 		rename $@ 's/[-_]{2,}/-/g' * # remove any remaining sequences like "_-"
 		rename $@ 's/nichijou-white/white/g' * # remove a specific duplicate
+		rename $@ 's/(\.[a-z]+)\1+$/$1/' * # remove dual extensions
 	}
 	
 	
