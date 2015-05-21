@@ -34,3 +34,6 @@
 
 # generated files
 *.log
+
+# temporary files
+.*.swp
