@@ -26,11 +26,7 @@ if [ "$1" == "makelink" ]; then # $2 is full path to file
 
 elif [ "$1" == "printdupe" ]; then #2 is a file whose link already exists
 
-	FILEPATH="$2"
-        FILENAME="$(basename "$2")" # the name the link would have had
-        REALFILE1="$(readlink -f "$FILENAME")" # path to first file
-	REALFILE2="$(readlink -f "$FILEPATH")" # path to newer file
-	echo "Duplicate files: ($REALFILE1) ($REALFILE2)"
+	echo "Duplicate file: $2"
 
 	
 elif [ "$1" == "deadlink" ]; then #2 is a dead link
@@ -61,7 +57,7 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 				echo "$FILENAME ($REALFILE) is not allowed"	
 			else
 				# this implies the rename failed because the file exists
-				"$SCRIPTPATH" printdupe "$LINKPATH"
+				"$SCRIPTPATH" printdupe "$REALFILE"
 			fi
 			
 			rm "$LINKPATH"
@@ -76,6 +72,8 @@ elif [ "$1" == "cleanup" ]; then #2 is file
 	check "'"
 	check "[)(!~;:]"
 	check "_-_"
+	check "[-_]{2,}"
+	check "nichijou-white"
 
 	# Check for disallowed files
 	check "iron[^a-z]*man" 1
@@ -104,6 +102,8 @@ elif [ "$1" == "operate" ]; then #2 is file
 		rename $@ 's/[)(!~;:]//g' * # weird characters
 		rename $@ 's/__+/_/g' * # multiple _ characters
 		rename $@ 's/_-_/-/g' * # the _-_ sequence that sometimes happense after space replacement
+		rename $@ 's/[-_]{2,}/-/g' * # remove any remaining sequences like "_-"
+		rename $@ 's/nichijou-white/white/g' * # remove a specific duplicate
 	}
 	
 	
