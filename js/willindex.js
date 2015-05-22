@@ -187,7 +187,8 @@ function queueRefresh(filename)
 	else
 	{
 		// somehow this call happened after a more recent call
-		console.log("this queueRefresh() happened after a more recent queueRefresh()");
+		console.log("this queueRefresh() happened after a more recent queueRefresh()\n"
+				+ "that really shouldn't happen");
 		return;
 	}
 	
@@ -313,8 +314,9 @@ function queueRefresh(filename)
 					console.log("invalid due to swf object being undefined");
 					clearInterval(loadCheckInterval);
 				}
+				else
 				{
-					console.log(filename + " is not loaded yet");
+					console.log(filename + " is not loaded yet. Trying again shortly.");
 				}
 			}
 		}, 100);
@@ -322,7 +324,6 @@ function queueRefresh(filename)
 	else
 	{
 		// not a swf, so skip the loading polling
-		console.log("not flash");
 		onObjectLoaded(swf_jquery);
 	}
 }
