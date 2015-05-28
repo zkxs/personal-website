@@ -6,6 +6,7 @@ if (!Date.now) {
 
 
 var debugging = false;
+var originalTitle = "SUPER WILL HOME PAGE 9000";
 var cookieName = "willswfs";
 var separator1 = ':';
 var separator2 = '!';
@@ -226,6 +227,7 @@ function queueRefresh(filename)
 	
 	
 	currentFilename = filename;
+	document.title = filename + " - " + originalTitle;
 	location.hash = '#' + filename; // might need to be urlencoded
 	
 	if (isFlash)
