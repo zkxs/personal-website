@@ -232,7 +232,11 @@ function queueRefresh(filename)
 	
 	if (firstTime && history && history.replaceState)
 	{
-		console.log(history.state);
+		/*
+		 * I want to replace the history state from the initial load with one
+		 * that includes the correct title, but the following code does not work.
+		 * Probably because history.state is always (mostly) null after a page refresh
+		 */
 		history.replaceState(filename,                  // state object
 				filename + " - " + originalTitle,       // title
 				window.location.href + '#' + filename)  // url
