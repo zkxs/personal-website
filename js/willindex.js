@@ -227,8 +227,8 @@ function queueRefresh(filename)
 	
 	
 	currentFilename = filename;
-	document.title = filename + " - " + originalTitle;
 	location.hash = '#' + filename; // might need to be urlencoded
+	document.title = filename + " - " + originalTitle;
 	
 	if (isFlash)
 	{
