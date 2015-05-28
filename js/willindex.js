@@ -15,6 +15,7 @@ var cookieExpiry =        60 * 60 * 24 * 365; // 1 year  (in s)
 var swfNumber = 0; // the number of the SWF we are currently on (0 if none loaded yet)
 var timeoutID;
 var currentFilename;
+var previousFilename;
 var finished = false;
 var ignoreUnpause = false;
 var timeLoaded;
@@ -225,8 +226,18 @@ function queueRefresh(filename)
 		}
 	}
 	
-	
+	var firstTime = currentFilename == undefined;
+	previousFilename = currentFilename;
 	currentFilename = filename;
+	
+	if (firstTime && history && history.replaceState)
+	{
+		console.log(history.state);
+		history.replaceState(filename,                  // state object
+				filename + " - " + originalTitle,       // title
+				window.location.href + '#' + filename)  // url
+		console.log("replaced first history entry");
+	}
 	location.hash = '#' + filename; // might need to be urlencoded
 	document.title = filename + " - " + originalTitle;
 	
