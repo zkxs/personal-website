@@ -126,8 +126,16 @@ function loadNextSwf(requested)
 		
 		if (requested)
 		{
-			// 'requested' should already be urlencoded
-			$('#swfSlot').load('/php/randomwillswf.php?swf=' + requested);
+			// 'requested' should already be urlencoded, but it may not be
+			
+			//var pattern = new RegExp(
+			//		"[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=]*");
+			//var result = pattern.test(requested);
+			
+			console.log('loading /php/randomwillswf.php?swf=' + requested);
+			$('#swfSlot').load('/php/randomwillswf.php?swf=' + requested, function(){
+				console.log("load callback");
+			});
 		}
 		else
 		{
@@ -155,6 +163,10 @@ function ohHashChange()
 			console.log("hash changed to " + location.hash);
 			loadNextSwf(newFilename);
 		}
+	}
+	else
+	{
+		loadNextSwf();
 	}
 }
 
