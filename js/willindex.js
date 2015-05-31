@@ -128,9 +128,13 @@ function loadNextSwf(requested)
 		{
 			// 'requested' should already be urlencoded, but it may not be
 			
-			//var pattern = new RegExp(
-			//		"[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=]*");
-			//var result = pattern.test(requested);
+			var pattern = 
+					new RegExp("^[-A-Za-z0-9\\._~:/?#[\\]@!$&'()*+,;=]*$");
+			if (!pattern.test(requested))
+			{
+				console.log('"' + requested + '" contains invalid characters, urlencoding them now');
+				requested = encodeURIComponent(requested);
+			}
 			
 			console.log('loading /php/randomwillswf.php?swf=' + requested);
 			$('#swfSlot').load('/php/randomwillswf.php?swf=' + requested, function(){
