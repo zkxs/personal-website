@@ -58,11 +58,15 @@
 	
 	$debugPrint = true;
 	
-	$cookie = $_COOKIE['willswfs'];
+	$cookie;
 	$seen = [];
-	if (!empty($cookie))
+	if (isset($_COOKIE['willswfs']))
 	{
-		$seen = explode(':', $cookie);
+		$cookie = $_COOKIE['willswfs'];
+		if (!empty($cookie))
+		{
+			$seen = explode(':', $cookie);
+		}
 	}
 	
 	for($i = 0, $size = count($seen); $i < $size; ++$i) {
