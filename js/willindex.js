@@ -129,7 +129,7 @@ function loadNextSwf(requested)
 			// 'requested' should already be urlencoded, but it may not be
 			
 			var pattern = 
-					new RegExp("^[-A-Za-z0-9\\._~:/?#[\\]@!$&'()*+,;=]*$");
+					new RegExp("^[-A-Za-z0-9\\._~:/?#[\\]@!$&'()*+,;=]*$"); // do '?#&@' need to be in this string?
 			if (!pattern.test(requested))
 			{
 				console.log('"' + requested + '" contains invalid characters, urlencoding them now');
