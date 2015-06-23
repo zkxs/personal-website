@@ -188,6 +188,13 @@ function start()
 	}
 }
 
+function updateSwfs()
+{
+	$.post('/php/willindexupdate.php', {token: idToken}, function(data) {
+		console.log(data);
+	}, 'text');
+}
+
 function paused()
 {
 	return $('#pausedcheckbox').prop('checked');
