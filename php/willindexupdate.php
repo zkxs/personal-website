@@ -51,7 +51,7 @@
 	
 	if (!$ticket) {
 		http_response_code(500);
-		exit('Not sure what could cause this');
+		exit('No ticket... not sure what could cause this');
 	}
 	
 	$gid = $ticket->getAttributes()['payload']['sub'];
@@ -83,7 +83,7 @@ SQL;
 			if ($perm != 1)
 			{
 				http_response_code(403);
-				exit('Forbidden');
+				exit('You do not have permission to do this');
 			}
 			
 		}
