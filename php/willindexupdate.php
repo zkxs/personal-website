@@ -31,7 +31,7 @@
 	
 	if (!isset($_POST['token']))
 	{
-		http_response_code(401);
+		http_response_code(400);
 		exit('No token supplied');
 	}
 	
@@ -45,7 +45,7 @@
 	}
 	catch (Google_Auth_Exception $e)
 	{
-		http_response_code(401);
+		http_response_code(400);
 		exit('Authentication error: ' . $e->getMessage());
 	}
 	
