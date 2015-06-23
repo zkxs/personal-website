@@ -1,0 +1,9 @@
+<Files client_secrets.json>
+	Order allow,deny
+	Deny from all
+</Files>
+
+<Files willindexdevkey.secret>
+	Order allow,deny
+	Deny from all
+</Files>

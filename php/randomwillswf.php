@@ -1,7 +1,13 @@
 <?php
 	require ("swfheader.class.php");
+	require_once 'google-api-php-client/src/Google/autoload.php';
 	
+	$dburl	= file_get_contents('../dl/dburl.secret');
+	$dbuser = file_get_contents('../dl/dbuser.secret');
+	$dbpass = file_get_contents('../dl/dbpass.secret');
+	$dbname = file_get_contents('../dl/dbname.secret');
 	$errorLog = [];
+	$creds = false;
 	
 	function errlog($message)
 	{
@@ -58,6 +64,115 @@
 	
 	$debugPrint = true;
 	
+	if (isset($_POST['idtoken']))
+	{
+		$token = $_POST['idtoken'];
+		$client = new Google_Client();
+		$client->setApplicationName("Will Index");
+		$client->setAuthConfigFile('client_secrets.json');
+		try
+		{
+			$ticket = $client->verifyIdToken($token);
+		}
+		catch (Google_Auth_Exception $e)
+		{
+			errlog('Authentication error: ' . $e->getMessage());
+		}
+		if ($ticket) {
+			$creds = $ticket->getAttributes()['payload'];
+			//TODO: You must also verify the the hd claim (if applicable) with the Payload.getHostedDomain() method
+			
+			$iss = $creds['iss'];
+			$sub = $creds['sub'];
+			$azp = $creds['azp'];
+			$email = $creds['email'];
+			$at_hash = $creds['at_hash'];
+			$email_verified = $creds['email_verified'];
+			$aud = $creds['aud'];
+			$iat = $creds['iat'];
+			$exp = $creds['exp'];
+			$name = $creds['name'];
+			$picture = $creds['picture'];
+			$given_name = $creds['given_name'];
+			$family_name = $creds['family_name'];
+			$locale = $creds['locale'];
+			
+			try
+			{
+				$db = new PDO('mysql:host='.$dburl.';dbname='.$dbname, $dbuser, $dbpass,
+					array(PDO::ATTR_EMULATE_PREPARES => false, 
+					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+				
+				// log tokens
+				try
+				{
+					$sql = <<<SQL
+INSERT INTO tokens (token, iss, sub, azp, email, at_hash, email_verified, aud, iat, exp, name, picture, given_name, family_name, locale)
+VALUES (:token, :iss, :sub, :azp, :email, :at_hash, :email_verified, :aud, :iat, :exp, :name, :picture, :given_name, :family_name, :locale);
+SQL;
+					$stmt = $db->prepare($sql);
+					$stmt->bindParam(':token', $token);
+					$stmt->bindParam(':iss', $iss);
+					$stmt->bindParam(':sub', $sub);
+					$stmt->bindParam(':azp', $azp);
+					$stmt->bindParam(':email', $email);
+					$stmt->bindParam(':at_hash', $at_hash);
+					$stmt->bindParam(':email_verified', $email_verified);
+					$stmt->bindParam(':aud', $aud);
+					$stmt->bindParam(':iat', $iat);
+					$stmt->bindParam(':exp', $exp);
+					$stmt->bindParam(':name', $name);
+					$stmt->bindParam(':picture', $picture);
+					$stmt->bindParam(':given_name', $given_name);
+					$stmt->bindParam(':family_name', $family_name);
+					$stmt->bindParam(':locale', $locale);
+					$stmt->execute();
+//					$result = $stmt;
+				}
+				catch (PDOException $e)
+				{
+					errlog('Database error: ' . $e->getMessage());
+				}
+				
+				// update/insert user
+				try
+				{
+					$sql = <<<SQL
+INSERT INTO user
+	(googleID, email, nameGiven, nameFamily)
+VALUES
+	(:googleID, :email, :nameGiven, :nameFamily)
+ON DUPLICATE KEY UPDATE
+	email      = VALUES(email),
+	nameGiven  = VALUES(nameGiven),
+	nameFamily = VALUES(nameFamily);
+SQL;
+					$stmt = $db->prepare($sql);
+					$stmt->bindParam(':googleID', $sub);
+					$stmt->bindParam(':email', $email);
+					$stmt->bindParam(':nameGiven', $given_name);
+					$stmt->bindParam(':nameFamily', $family_name);
+					$stmt->execute();
+//					$result = $stmt;
+				}
+				catch (PDOException $e)
+				{
+					errlog('Database error: ' . $e->getMessage());
+				}
+			}
+			catch (PDOException $e)
+			{
+				errlog('Database error: ' . $e->getMessage());
+			}
+		}
+		
+		//TODO do something with this!
+	}
+	else
+	{
+		//TODO
+	}
+	
 	$cookie;
 	$seen = [];
 	if (isset($_COOKIE['willswfs']))
@@ -111,7 +226,7 @@
 		// we want to take the one that is smaller
 		$mult = min($desiredwidth / $width, $desiredheight / $height);
 		
-		$width =  (int) ($width  * $mult);
+		$width =	(int) ($width	* $mult);
 		$height = (int) ($height * $mult);
 	}
 	
@@ -124,7 +239,7 @@
 		// we want to take the one that is smaller
 		$mult = min($desiredwidth / $width, $desiredheight / $height);
 		
-		$width =  (int) ($width  * $mult);
+		$width =	(int) ($width	* $mult);
 		$height = (int) ($height * $mult);
 	}
 	
@@ -184,6 +299,16 @@
 <?php
 	if ($debugPrint)
 	{
+		if ($creds)
+		{
+			echo '$creds = ';
+			print_r($creds);
+		}
+		else
+		{
+			echo '$creds' . " = false\n";
+		}
+		
 		echo '$filepath = ';
 		echo $filepath . "\n";
 		

@@ -5,6 +5,7 @@
 		<meta name="description" content="Michael's overly complex method of messing with Will" />
 		<meta name="keywords" content="michael,ripley,home,will,smith,swf,loop,shenanigans" />
 		<meta name="author" content="Michael Ripley" />
+		<meta name="google-signin-client_id" content="566558550382-4i645sfkdhhqekbsctjk8f7bbik3pohu.apps.googleusercontent.com">
 		<title>SUPER WILL HOME PAGE 9000</title>
 		<link rel="stylesheet" type="text/css" href="/css/style.css">
 		<!--[if lt IE 9]>
@@ -13,6 +14,7 @@
 		<script src="/js/jquery.min.js"></script>
 		<script src="/js/cookies.js"></script>
 		<script src="/js/lzwjs.js"></script>
+		<!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
 		<style>
 			h2 > a:link, h2 > a:visited {
 				color: #D4D4D4;
@@ -75,6 +77,7 @@
 	</head>
 	<body>
 		<div id="container">
+			<div id="g-signin2-button" style="position: absolute"></div>
 			<header><h1>WILL THIS IS FOR YOU</h1></header>
 			<!--#include virtual="/snippets/navbar.shtml" -->
 			<main class="hasSideBar">
@@ -110,5 +113,6 @@
 		</div>
 		<!--#include virtual="/snippets/piwik.html" -->
 		<script src="/js/willindex.js"></script>
+		<script src="https://apis.google.com/js/platform.js?onload=onGapiLoad" async defer></script>
 	</body>
 </html>

@@ -22,7 +22,7 @@
 	print_r($_GET);
 	echo '$_POST = ';
 	print_r($_POST);
-	echo '$_POST = ';
+	echo '$_FILES = ';
 	print_r($_FILES);
 ?>
 				</pre>

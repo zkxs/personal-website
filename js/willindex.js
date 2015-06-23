@@ -19,6 +19,7 @@ var previousFilename;
 var finished = false;
 var ignoreUnpause = false;
 var timeLoaded;
+var idToken; // Google single sign-on id token
 
 function debug(toDebug)
 {
@@ -53,6 +54,137 @@ function debug(toDebug)
 	else
 	{
 		return "What are you playing at?";
+	}
+}
+
+function onGapiLoad() // called by platform.js?onload=onGapiLoad
+{
+
+	
+	gapi.load('auth2', function() {
+		
+		var auth2 = gapi.auth2.init();
+		auth2.isSignedIn.listen(onSignInChange);
+		if (auth2.isSignedIn.get()) // gapi.auth2.getAuthInstance().isSignedIn.get()
+		{
+			console.log('already signed in');
+			onSuccess(auth2.currentUser.get());
+			start();
+		}
+		else
+		{
+ 			console.log("not signed in, waiting a bit to see if anything changes");
+			setTimeout(function() {
+				if (!auth2.isSignedIn.get())
+				{
+					showButton();
+					start();
+				}
+			}, 750); // wait a while for google to fucking tell us if we're signed in or not
+			// Sign the user in, and then retrieve their ID.
+/* 			auth2.signIn().then(function() {
+				console.log('signed in!');
+				onSuccess(auth2.currentUser.get());
+				start();
+			}, function(error) {
+				console.log('sign in failed.');
+				console.log(error);
+				start();
+			}); */
+		}
+		
+		// how to start if not logged in?
+	});
+}
+
+var buttonFadeTime = 100;
+var buttonCreated = false;
+function showButton()
+{
+	var button = document.getElementById('g-signin2-button');
+	if (!buttonCreated)
+	{
+		buttonCreated = true;
+		console.log("creating button");
+		button.style.visibility = "hidden";
+		gapi.signin2.render('g-signin2-button', {
+			'scope': 'profile',
+			'width': 120,
+			'height': 36,
+			'longtitle': false,
+			'theme': 'dark',
+			//'onsuccess': onSuccess,
+			'onfailure': onFailure
+		});
+	}
+	if (buttonCreated && (button.style.visibility === "hidden" || !$('#g-signin2-button').is(":visible")))
+	{
+		console.log("revealing button");
+		$('#g-signin2-button').css('visibility','initial').hide().fadeIn(buttonFadeTime);
+	}
+}
+
+function onSuccess(googleUser)
+{
+	// Useful data for your client-side scripts:
+	var profile = googleUser.getBasicProfile();
+	console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+	console.log("Name: " + profile.getName());
+	console.log("Image URL: " + profile.getImageUrl());
+	console.log("Email: " + profile.getEmail());
+	
+	// The ID token you need to pass to your backend:
+	idToken = googleUser.getAuthResponse().id_token; // save this for later!
+	console.log("ID Token: " + idToken);
+	
+	// hide the button
+	console.log('gotta hide dat button!');
+	$('#g-signin2-button').fadeOut(buttonFadeTime);
+	
+	start();
+};
+
+function onFailure(error)
+{
+	console.log(error);
+}
+
+function onSignInChange(isSignedIn)
+{
+	if (isSignedIn)
+	{
+		onSuccess(gapi.auth2.getAuthInstance().currentUser.get());
+	}
+}
+
+function signOut() {
+	if (gapi && gapi.auth2)
+	{
+		var auth2 = gapi.auth2.getAuthInstance();
+		auth2.signOut().then(function () {
+			idToken = undefined; // clear out idToken
+			console.log('User signed out.');
+		});
+	}
+	showButton();
+}
+
+var started = false;
+function start()
+{
+	if (!started)
+	{
+		started = true;
+		
+		// load the initial swf
+		if (location.hash)
+		{
+			loadNextSwf(location.hash.substring(1));
+		}
+		else
+		{
+			loadNextSwf();
+		}
 	}
 }
 
@@ -128,8 +260,8 @@ function loadNextSwf(requested)
 		{
 			// 'requested' should already be urlencoded, but it may not be
 			
-			var pattern = 
-					new RegExp("^[-A-Za-z0-9\\._~:/?#[\\]@!$&'()*+,;=]*$"); // do '?#&@' need to be in this string?
+			var pattern = // allowed characters
+					new RegExp("^[-A-Za-z0-9\\._~:/?#[\\]@!$'()*+,;=]*$"); // do '?#&@' need to be in this string?
 			if (!pattern.test(requested))
 			{
 				console.log('"' + requested + '" contains invalid characters, urlencoding them now');
@@ -137,13 +269,12 @@ function loadNextSwf(requested)
 			}
 			
 			console.log('loading /php/randomwillswf.php?swf=' + requested);
-			$('#swfSlot').load('/php/randomwillswf.php?swf=' + requested, function(){
-				console.log("load callback");
-			});
+			$('#swfSlot').load('/php/randomwillswf.php?swf=' + requested, {idtoken: idToken});
 		}
 		else
 		{
-			$('#swfSlot').load('/php/randomwillswf.php');
+			console.log('loading /php/randomwillswf.php');
+			$('#swfSlot').load('/php/randomwillswf.php', {idtoken: idToken});
 		}
 	}
 	else
@@ -451,15 +582,5 @@ $(window).on('hashchange', ohHashChange);
 
 // update the cookie
 updateCookie(Date.now());
-
-// load the initial swf
-if (location.hash)
-{
-	loadNextSwf(location.hash.substring(1));
-}
-else
-{
-	loadNextSwf();
-}
 
 console.log("For debug info, run debug()");
