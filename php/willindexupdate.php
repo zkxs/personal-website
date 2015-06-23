@@ -6,6 +6,70 @@
 	ignore_user_abort(true); // just to be safe
 	ob_start();
 
+	// filter out files we don't want to copy
+	$badFilenames = array(
+		'/iron[^a-z]*man/',      // extremely loud
+		'/flow\.swf/',           // game
+		'/hyper.?railgun/',      // has start button
+		'/james.?driving/',      // has start button
+		'/bad.?apple/',          // ?
+		'/citronnade.?flower/',  // ?
+		'/rolling.?udonge/',     // ?
+		'/wew12/',               // ?
+		'/nichijou[^a-z]*white/' // use 'white.swf' instead please (duplicate)
+	);
+
+	function startsWith($haystack, $needle)
+	{
+		// search backwards starting from haystack length characters from the end
+		return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+	}
+
+	function endsWith($haystack, $needle)
+	{
+		// search forward starting from end minus needle length characters
+		return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+	}
+
+	class MyRecursiveFilterIterator extends RecursiveFilterIterator
+	{
+
+		public function accept()
+		{
+			global $badFilenames;
+			$filename = $this->current()->getFilename();
+			// Skip hidden files and directories.
+			if ($filename[0] === '.') // must not start with a dot
+			{
+				return false;
+			}
+			else if ($this->current()->isDir()) // directories are OK
+			{
+				return true;
+			}
+			else if ( !(
+				endsWith($filename, '.swf') ||
+				endsWith($filename, '.jpg') ||
+				endsWith($filename, '.png') )
+			) // must end in swf, jpg, or png
+			{
+				return false;
+			}
+
+			// blacklist bad filenames
+			$filenameLower = strtolower($filename);
+			foreach ($badFilenames as $pattern)
+			{
+				if (preg_match($pattern, $filenameLower))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+	}
+
 	function print_result($result) {
 		echo "<table class=\"sortable\">\n";
 		echo '<thead>';
@@ -29,18 +93,34 @@
 		echo "</table>\n";
 	}
 
+	function getSimpleName($filename)
+	{
+		$filename = strtolower($filename);                             // upper to lower case
+		$filename = preg_replace('/[\s]/', '_', $filename);            // remove whitespace
+		$filename = preg_replace("/'/", '', $filename);                // remove the ' character
+		$filename = preg_replace('/[)(]/', '_', $filename);            // parens to '_'
+		$filename = preg_replace('/^_+/', '', $filename);              // remove leading '_'
+		$filename = preg_replace('/[!~;:#?&]/', '_', $filename);       // weird characters to '_'
+		$filename = preg_replace('/__+/', '_', $filename);             // collapse multiple '__' sequences
+		$filename = preg_replace('/[-_]{2,}/', '-', $filename);        // collapse adjacent '-' and '_' to a '-'
+		$filename = preg_replace('/[._]{2,}/', '.', $filename);        // collapse adjacent '.' and '_' to a '.'
+		$filename = preg_replace('/(\.[a-z]+)\1+$/', '$1', $filename); // remove dual extensions
+		//$filename = preg_replace('', '', $filename);
+		return $filename;
+	}
+
 	require_once 'google-api-php-client/src/Google/autoload.php';
 	$dburl	= file_get_contents('../dl/dburl.secret');
 	$dbuser = file_get_contents('../dl/dbuser.secret');
 	$dbpass = file_get_contents('../dl/dbpass.secret');
 	$dbname = file_get_contents('../dl/dbname.secret');
-	
+
 	if (!isset($_POST['token']))
 	{
 //		http_response_code(400);
 		exit('No token supplied');
 	}
-	
+
 	$token = $_POST['token'];
 	$client = new Google_Client();
 	$client->setApplicationName("Will Index");
@@ -54,19 +134,19 @@
 //		http_response_code(400);
 		exit('Authentication error: ' . $e->getMessage());
 	}
-	
+
 	if (!$ticket) {
 //		http_response_code(500);
 		exit('No ticket... not sure what could cause this');
 	}
-	
+
 	$gid = $ticket->getAttributes()['payload']['sub'];
-	
+
 	// open database
 	try
 	{
 		$db = new PDO('mysql:host='.$dburl.';dbname='.$dbname, $dbuser, $dbpass,
-			array(PDO::ATTR_EMULATE_PREPARES => false, 
+			array(PDO::ATTR_EMULATE_PREPARES => false,
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 		$sql = <<<SQL
 SELECT COUNT(u.userID) AS count FROM map_user_permission m
@@ -79,40 +159,48 @@ SQL;
 		$stmt->bindParam(':gid', $gid);
 		$stmt->execute();
 		$perm = $stmt->fetch(PDO::FETCH_NAMED)['count'];
-		
+
 		// $perm is 1 if we have the swf.update permission
-		
+
 		if ($perm != 1)
 		{
 //			http_response_code(403);
 			exit('You do not have permission to do this');
 		}
-		
+
 	}
 	catch (PDOException $e)
 	{
 		http_response_code(500);
 		exit('Database error: ' . $e->getMessage());
 	}
-	
-	// at this point we would actually do the updating
-	
-	//TODO: do dat
-	
-	
-	http_response_code(201);
+
+	// TODO: move this block DOWN below the magic background line
+	$path = '/home/wsmith/swf';
+	$directory = new RecursiveDirectoryIterator($path, FilesystemIterator::FOLLOW_SYMLINKS);
+	$filter = new MyRecursiveFilterIterator($directory);
+	$iterator = new RecursiveIteratorIterator($filter);
+	foreach ($iterator as $info)
+	{
+		echo $info->getPathname() . " => " . getSimpleName($info->getFilename()) . "\n";
+	}
+
+	http_response_code(202); // 202 Accepted
 	echo('Initiated SWF update.');
 	$size = ob_get_length();
 	header("Content-Length: $size");
 	ob_end_flush(); // Strange behaviour, will not work
 	flush(); // Unless both are called!
-	
+
 	// if you're using sessions, this prevents subsequent requests
 	// from hanging while the background process executes
 	if (session_id()) session_write_close();
-	
+
 	// Do background processing here
-	
+
+	//TODO: make the links!
+
+
 	$sql = <<<SQL
 UPDATE swf
 SET
@@ -120,10 +208,10 @@ SET
 SQL;
 	$stmt = $db->prepare($sql);
 	$stmt->execute();
-	
+
 	$dir = $_SERVER['DOCUMENT_ROOT'].'/img/will';
 	$files = glob($dir . '/*.*');
-	
+
 	$sql = <<<SQL
 INSERT INTO swf
 	(filename)
@@ -133,19 +221,19 @@ ON DUPLICATE KEY UPDATE
 	present = b'1';
 SQL;
 	$stmt = $db->prepare($sql);
-	
+
 	foreach ($files as $filepath)
 	{
 		$filename = preg_replace("/.*\//", "", $filepath);
 		$stmt->bindParam(':filename', $filename, PDO::PARAM_STR);
 		$stmt->execute();
 	}
-	
+
 /* 	$sql = <<<SQL
 DELETE FROM swf
 WHERE present = b'0';
 SQL;
 	$stmt = $db->prepare($sql);
 	$stmt->execute(); */
-	
+
 ?>

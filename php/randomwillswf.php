@@ -148,13 +148,14 @@ SQL;
 				{
 					$sql = <<<SQL
 INSERT INTO user
-	(googleID, email, nameGiven, nameFamily)
+	(googleID, email, nameGiven, nameFamily, lastSeen)
 VALUES
-	(:googleID, :email, :nameGiven, :nameFamily)
+	(:googleID, :email, :nameGiven, :nameFamily, now())
 ON DUPLICATE KEY UPDATE
 	email      = VALUES(email),
 	nameGiven  = VALUES(nameGiven),
-	nameFamily = VALUES(nameFamily);
+	nameFamily = VALUES(nameFamily),
+	lastSeen   = now();
 SQL;
 					$stmt = $db->prepare($sql);
 					$stmt->bindParam(':googleID', $sub);
