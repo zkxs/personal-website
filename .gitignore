@@ -7,12 +7,16 @@
 /fastdownload/**/*.nav
 /wayne
 /will
+/php/google-api-php-client/
+/mharms
 
 # Files that contain sensitive information
 .htpasswd
 .htgroups
 /post/post.log
 *.secret
+*secret.json
+*secrets.json
 
 # Hosted binary files
 /files/*
