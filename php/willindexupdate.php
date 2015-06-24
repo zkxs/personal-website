@@ -10,11 +10,11 @@
 	$badFilenames = array(
 		'/iron[^a-z]*man/',      // extremely loud
 		'/flow\.swf/',           // game
-		'/hyper.?railgun/',      // has start button
-		'/james.?driving/',      // has start button
-		'/bad.?apple/',          // ?
-		'/citronnade.?flower/',  // ?
-		'/rolling.?udonge/',     // ?
+		'/hyper[^a-z]*railgun/',      // has start button
+		'/james[^a-z]*driving/',      // has start button
+		'/bad[^a-z]*apple/',          // ?
+		'/citronnade[^a-z]*flower/',  // has start button "CITRONNADE-FLOWER.swf"
+		'/rolling[^a-z]*udonge/',     // ?
 		'/wew12/',               // ?
 		'/nichijou[^a-z]*white/' // use 'white.swf' instead please (duplicate)
 	);
@@ -37,15 +37,20 @@
 		public function accept()
 		{
 			global $badFilenames;
-			$filename = $this->current()->getFilename();
+			$file = $this->current();
+			$filename = $file->getFilename();
 			// Skip hidden files and directories.
 			if ($filename[0] === '.') // must not start with a dot
 			{
 				return false;
 			}
-			else if ($this->current()->isDir()) // directories are OK
+			else if ($file->isDir() && $file->isReadable() && $file->isExecutable()) // directories are OK
 			{
 				return true;
+			}
+			else if (!$file->isReadable()) // file must be readable
+			{
+				return false;
 			}
 			else if ( !(
 				endsWith($filename, '.swf') ||
@@ -60,9 +65,15 @@
 			$filenameLower = strtolower($filename);
 			foreach ($badFilenames as $pattern)
 			{
+				//echo "checking $filenameLower against $pattern: ";
 				if (preg_match($pattern, $filenameLower))
 				{
+					//echo "bad\n";
 					return false;
+				}
+				else
+				{
+					//echo "ok\n";
 				}
 			}
 
@@ -174,17 +185,8 @@ SQL;
 		http_response_code(500);
 		exit('Database error: ' . $e->getMessage());
 	}
-
-	// TODO: move this block DOWN below the magic background line
-	$path = '/home/wsmith/swf';
-	$directory = new RecursiveDirectoryIterator($path, FilesystemIterator::FOLLOW_SYMLINKS);
-	$filter = new MyRecursiveFilterIterator($directory);
-	$iterator = new RecursiveIteratorIterator($filter);
-	foreach ($iterator as $info)
-	{
-		echo $info->getPathname() . " => " . getSimpleName($info->getFilename()) . "\n";
-	}
-
+	
+	
 	http_response_code(202); // 202 Accepted
 	echo('Initiated SWF update.');
 	$size = ob_get_length();
@@ -196,11 +198,12 @@ SQL;
 	// from hanging while the background process executes
 	if (session_id()) session_write_close();
 
+	
 	// Do background processing here
-
-	//TODO: make the links!
-
-
+	/* ********************************************************************** */
+	
+	
+	//mark all SWFS as gone
 	$sql = <<<SQL
 UPDATE swf
 SET
@@ -208,10 +211,20 @@ SET
 SQL;
 	$stmt = $db->prepare($sql);
 	$stmt->execute();
-
-	$dir = $_SERVER['DOCUMENT_ROOT'].'/img/will';
-	$files = glob($dir . '/*.*');
-
+	
+	// remove all links
+	$dstpath = '/var/www/img/will/';
+	$files = glob($dstpath . '*'); // get all file names
+	$directory = new RecursiveDirectoryIterator($dstpath, FilesystemIterator::FOLLOW_SYMLINKS | FilesystemIterator::SKIP_DOTS);
+	$iterator = new RecursiveIteratorIterator($directory);
+	foreach($iterator as $file){ // iterate files
+		if(is_link($file))
+		{
+			unlink($file); // delete file
+		}
+	}
+	
+	// prepare statement for use in loop
 	$sql = <<<SQL
 INSERT INTO swf
 	(filename)
@@ -221,19 +234,26 @@ ON DUPLICATE KEY UPDATE
 	present = b'1';
 SQL;
 	$stmt = $db->prepare($sql);
-
-	foreach ($files as $filepath)
+	
+	
+	$srcpath = '/home/wsmith/swf';
+	$directory = new RecursiveDirectoryIterator($srcpath, FilesystemIterator::FOLLOW_SYMLINKS);
+	$filter = new MyRecursiveFilterIterator($directory);
+	$iterator = new RecursiveIteratorIterator($filter);
+	foreach ($iterator as $info)
 	{
-		$filename = preg_replace("/.*\//", "", $filepath);
-		$stmt->bindParam(':filename', $filename, PDO::PARAM_STR);
-		$stmt->execute();
+		$simplename = getSimpleName($info->getFilename());
+		//echo $info->getPathname() . " => " . $dstpath . $simplename . "\n";
+		if (symlink($info->getPathname(), $dstpath . $simplename))
+		{
+			// link worked, stick it in the database
+			$stmt->bindParam(':filename', $simplename, PDO::PARAM_STR);
+			$stmt->execute();
+		}
+		else
+		{
+			// link failed
+			echo "LINK FAILED\n";
+		}
 	}
-
-/* 	$sql = <<<SQL
-DELETE FROM swf
-WHERE present = b'0';
-SQL;
-	$stmt = $db->prepare($sql);
-	$stmt->execute(); */
-
 ?>

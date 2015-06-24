@@ -6,7 +6,7 @@ SELECT CONVERT(filename USING utf8) AS filename FROM swf
 WHERE enabled = b'1'
 AND PRESENT = b'1'
 ORDER BY RAND()
-LIMIT 1	
+LIMIT 1
 */
 	require ("swfheader.class.php");
 	require_once 'google-api-php-client/src/Google/autoload.php';
