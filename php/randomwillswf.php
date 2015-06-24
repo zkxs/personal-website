@@ -1,13 +1,4 @@
 <?php
-/*
-todo:
-
-SELECT CONVERT(filename USING utf8) AS filename FROM swf
-WHERE enabled = b'1'
-AND PRESENT = b'1'
-ORDER BY RAND()
-LIMIT 1
-*/
 	require ("swfheader.class.php");
 	require_once 'google-api-php-client/src/Google/autoload.php';
 	
@@ -18,22 +9,30 @@ LIMIT 1
 	$errorLog = [];
 	$creds = false;
 	
+	try
+	{
+		$db = new PDO('mysql:host='.$dburl.';dbname='.$dbname, $dbuser, $dbpass,
+			array(PDO::ATTR_EMULATE_PREPARES => false, 
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+	}
+	catch (PDOException $e)
+	{
+		errlog('Database error: ' . $e->getMessage());
+	}
+
 	function errlog($message)
 	{
 		global $errorLog;
 		array_push($errorLog, $message);
 	}
 	
-	function random_pic($dir, $seen)
+	function random_pic($dir)
 	{
-		$files = glob($dir . '/*.*');
-		
 		if (!empty($_GET['swf'])) {
 			$requested = $_GET['swf'];
-			$requestedFile = $dir . '/' . $requested;
-			if (file_exists($requestedFile))
+			if (file_exists($dir . '/' . $requested))
 			{
-				return $requestedFile;
+				return $requested;
 			}
 			else
 			{
@@ -41,34 +40,18 @@ LIMIT 1
 			}
 		}
 		
-		$numFiles = count($files);
-		
-		foreach ($seen as $seenfile)
-		{
-			if ($numFiles <= 1)
-			{
-				break;
-			}
-			else
-			{
-				$index = array_search($dir . '/' . $seenfile['name'], $files);
-				if ( $index !== false)
-				{
-					unset($files[$index]);
-					//errlog("unset " . $seenfile['name']);
-				}
-				else
-				{
-					errlog('File "' . $seenfile['name'] . '" referenced in cookie is not valid.');
-				}
-				$numFiles -= 1;
-			}
-		}
-		
-		//errlog("files remaining: " . $numFiles);
-		
-		$file = array_rand($files);
-		return $files[$file];
+		$sql = <<<SQL
+	SELECT CONVERT(filename USING utf8) AS filename FROM swf
+	WHERE enabled = b'1'
+	AND PRESENT = b'1'
+	ORDER BY RAND()
+	LIMIT 1
+SQL;
+		global $db;
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+		$filename = $stmt->fetch(PDO::FETCH_NAMED)['filename'];
+		return $filename;
 	}
 	
 	$debugPrint = true;
@@ -106,47 +89,40 @@ LIMIT 1
 			$family_name = $creds['family_name'];
 			$locale = $creds['locale'];
 			
+			// log tokens
 			try
 			{
-				$db = new PDO('mysql:host='.$dburl.';dbname='.$dbname, $dbuser, $dbpass,
-					array(PDO::ATTR_EMULATE_PREPARES => false, 
-					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-				
-				// log tokens
-				try
-				{
-					$sql = <<<SQL
+				$sql = <<<SQL
 INSERT INTO tokens (token, iss, sub, azp, email, at_hash, email_verified, aud, iat, exp, name, picture, given_name, family_name, locale)
 VALUES (:token, :iss, :sub, :azp, :email, :at_hash, :email_verified, :aud, :iat, :exp, :name, :picture, :given_name, :family_name, :locale);
 SQL;
-					$stmt = $db->prepare($sql);
-					$stmt->bindParam(':token', $token);
-					$stmt->bindParam(':iss', $iss);
-					$stmt->bindParam(':sub', $sub);
-					$stmt->bindParam(':azp', $azp);
-					$stmt->bindParam(':email', $email);
-					$stmt->bindParam(':at_hash', $at_hash);
-					$stmt->bindParam(':email_verified', $email_verified);
-					$stmt->bindParam(':aud', $aud);
-					$stmt->bindParam(':iat', $iat);
-					$stmt->bindParam(':exp', $exp);
-					$stmt->bindParam(':name', $name);
-					$stmt->bindParam(':picture', $picture);
-					$stmt->bindParam(':given_name', $given_name);
-					$stmt->bindParam(':family_name', $family_name);
-					$stmt->bindParam(':locale', $locale);
-					$stmt->execute();
-//					$result = $stmt;
-				}
-				catch (PDOException $e)
-				{
-					errlog('Database error: ' . $e->getMessage());
-				}
+				$stmt = $db->prepare($sql);
+				$stmt->bindParam(':token', $token);
+				$stmt->bindParam(':iss', $iss);
+				$stmt->bindParam(':sub', $sub);
+				$stmt->bindParam(':azp', $azp);
+				$stmt->bindParam(':email', $email);
+				$stmt->bindParam(':at_hash', $at_hash);
+				$stmt->bindParam(':email_verified', $email_verified);
+				$stmt->bindParam(':aud', $aud);
+				$stmt->bindParam(':iat', $iat);
+				$stmt->bindParam(':exp', $exp);
+				$stmt->bindParam(':name', $name);
+				$stmt->bindParam(':picture', $picture);
+				$stmt->bindParam(':given_name', $given_name);
+				$stmt->bindParam(':family_name', $family_name);
+				$stmt->bindParam(':locale', $locale);
+				$stmt->execute();
+			}
+			catch (PDOException $e)
+			{
+				errlog('Database error: ' . $e->getMessage());
+			}
 				
-				// update/insert user
-				try
-				{
-					$sql = <<<SQL
+			// update/insert user
+			try
+			{
+				$sql = <<<SQL
 INSERT INTO user
 	(googleID, email, nameGiven, nameFamily, lastSeen)
 VALUES
@@ -157,18 +133,12 @@ ON DUPLICATE KEY UPDATE
 	nameFamily = VALUES(nameFamily),
 	lastSeen   = now();
 SQL;
-					$stmt = $db->prepare($sql);
-					$stmt->bindParam(':googleID', $sub);
-					$stmt->bindParam(':email', $email);
-					$stmt->bindParam(':nameGiven', $given_name);
-					$stmt->bindParam(':nameFamily', $family_name);
-					$stmt->execute();
-//					$result = $stmt;
-				}
-				catch (PDOException $e)
-				{
-					errlog('Database error: ' . $e->getMessage());
-				}
+				$stmt = $db->prepare($sql);
+				$stmt->bindParam(':googleID', $sub);
+				$stmt->bindParam(':email', $email);
+				$stmt->bindParam(':nameGiven', $given_name);
+				$stmt->bindParam(':nameFamily', $family_name);
+				$stmt->execute();
 			}
 			catch (PDOException $e)
 			{
@@ -199,9 +169,11 @@ SQL;
 		$seen[$i] = ['name' => $split_pair[0], 'time' => $split_pair[1]];
 	}
 	
-	$filepathLocal = random_pic($_SERVER['DOCUMENT_ROOT'].'/img/will', $seen);
-	$filepath = str_replace($_SERVER['DOCUMENT_ROOT'], "", $filepathLocal);
-	$filename = preg_replace("/.*\//", "", $filepath);
+	$localdir = '/img/will';
+	$dir = $_SERVER['DOCUMENT_ROOT'].$localdir;
+	$filename = random_pic($dir);
+	$filepath = $localdir . '/' . $filename;
+	$filepathLocal = $dir . '/' . $filename;
 	$filenameNoExt = preg_replace("/\.[a-zA-Z0-9]{1,4}$/", "", $filename);
 	$fileExt = strtolower(preg_replace("/^.*\.([a-zA-Z0-9]{1,4})$/", "$1", $filename));
 	$filenameNoExt = strtoupper($filenameNoExt);
