@@ -256,4 +256,5 @@ SQL;
 			echo "LINK FAILED\n";
 		}
 	}
+	error_log("UPDATE COMPLETE.");
 ?>
