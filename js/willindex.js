@@ -168,6 +168,7 @@ function signOut() {
 	}
 	showButton();
 }
+var logOut = signOut; // alias for signOut for those with poor memory
 
 var started = false;
 function start()
