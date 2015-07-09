@@ -267,7 +267,15 @@ SQL;
 		else
 		{
 			// link failed
-			fwrite($logFile, "Link Failed: " . error_get_last()["message"] . " [" . $info->getPathname() . " --> " . $dstpath . $simplename . "] \n");
+			
+			if (error_get_last()["message"] == 'symlink(): File exists') // if duplicate files
+			{
+				fwrite($logFile, "Duplicate files: '" . $info->getPathname() . "' and '" . readlink($dstpath.$simplename) . "' \n");
+			}
+			else
+			{
+				fwrite($logFile, "Link Failed: " . error_get_last()["message"] . " [" . $info->getPathname() . " --> " . $dstpath . $simplename . "] \n");
+			}
 		}
 	}
 	fwrite($logFile, "Update complete.\n");
