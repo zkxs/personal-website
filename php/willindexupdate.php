@@ -8,15 +8,15 @@
 
 	// filter out files we don't want to copy
 	$badFilenames = array(
-		'/iron[^a-z]*man/',      // extremely loud
-		'/flow\.swf/',           // game
+		'/iron[^a-z]*man/',           // extremely loud
+		'/flow\.swf/',                // game
 		'/hyper[^a-z]*railgun/',      // has start button
 		'/james[^a-z]*driving/',      // has start button
 		'/bad[^a-z]*apple/',          // ?
 		'/citronnade[^a-z]*flower/',  // has start button "CITRONNADE-FLOWER.swf"
 		'/rolling[^a-z]*udonge/',     // ?
-		'/wew12/',               // ?
-		'/nichijou[^a-z]*white/' // use 'white.swf' instead please (duplicate)
+		'/wew12/',                    // ?
+		'/nichijou[^a-z]*white/'      // use 'white.swf' instead please (duplicate)
 	);
 
 	function startsWith($haystack, $needle)
@@ -37,19 +37,31 @@
 		public function accept()
 		{
 			global $badFilenames;
+			global $logFile;
 			$file = $this->current();
 			$filename = $file->getFilename();
+			$filepath = $file->getPathname();
 			// Skip hidden files and directories.
 			if ($filename[0] === '.') // must not start with a dot
 			{
+				//fwrite($logFile, "Ignoring file: '$filepath' Reason: Starts with '.'\n");
 				return false;
 			}
-			else if ($file->isDir() && $file->isReadable() && $file->isExecutable()) // directories are OK
+			else if ($file->isDir()) // directories are OK
 			{
-				return true;
+				if ($file->isReadable() && $file->isExecutable()) // but only if we can read them
+				{
+					return true;
+				}
+				else
+				{
+					fwrite($logFile, "Ignoring directory: '$filepath' Reason: Not readable/executable\n");
+					return false;
+				}
 			}
 			else if (!$file->isReadable()) // file must be readable
 			{
+				fwrite($logFile, "Ignoring file: '$filepath' Reason: Not readable\n");
 				return false;
 			}
 			else if ( !(
@@ -58,6 +70,7 @@
 				endsWith($filename, '.png') )
 			) // must end in swf, jpg, or png
 			{
+				fwrite($logFile, "Ignoring file: '$filepath' Reason: Invalid extension\n");
 				return false;
 			}
 
@@ -68,12 +81,8 @@
 				//echo "checking $filenameLower against $pattern: ";
 				if (preg_match($pattern, $filenameLower))
 				{
-					//echo "bad\n";
+					fwrite($logFile, "Ignoring file: '$filepath' Reason: Manually blacklisted\n");
 					return false;
-				}
-				else
-				{
-					//echo "ok\n";
 				}
 			}
 
@@ -125,6 +134,9 @@
 	$dbuser = file_get_contents('../dl/dbuser.secret');
 	$dbpass = file_get_contents('../dl/dbpass.secret');
 	$dbname = file_get_contents('../dl/dbname.secret');
+	
+	$logFilepath = "../img/will.log";
+	$logFile = fopen($logFilepath, 'w') or exit('Could not open log file for writing.');
 
 	if (!isset($_POST['token']))
 	{
@@ -246,6 +258,8 @@ SQL;
 		//echo $info->getPathname() . " => " . $dstpath . $simplename . "\n";
 		if (symlink($info->getPathname(), $dstpath . $simplename))
 		{
+			//fwrite($logFile, "Link Succeeded: [" . $info->getPathname() . " --> " . $dstpath . $simplename . "]\n");
+			
 			// link worked, stick it in the database
 			$stmt->bindParam(':filename', $simplename, PDO::PARAM_STR);
 			$stmt->execute();
@@ -253,8 +267,9 @@ SQL;
 		else
 		{
 			// link failed
-			echo "LINK FAILED\n";
+			fwrite($logFile, "Link Failed: " . error_get_last()["message"] . " [" . $info->getPathname() . " --> " . $dstpath . $simplename . "] \n");
 		}
 	}
-	error_log("UPDATE COMPLETE.");
+	fwrite($logFile, "Update complete.\n");
+	fclose($logFile);
 ?>
