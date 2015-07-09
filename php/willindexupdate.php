@@ -81,7 +81,7 @@
 				//echo "checking $filenameLower against $pattern: ";
 				if (preg_match($pattern, $filenameLower))
 				{
-					fwrite($logFile, "Ignoring file: '$filepath' Reason: Manually blacklisted\n");
+					//fwrite($logFile, "Ignoring file: '$filepath' Reason: Manually blacklisted\n");
 					return false;
 				}
 			}
