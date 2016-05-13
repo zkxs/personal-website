@@ -35,6 +35,9 @@
 !/tmp/phishing
 /tmp/phishing/*
 !/tmp/phishing/.htaccess
+!/tmp/secret.sh
+!/tmp/azenv.php
+!/tmp/ports.shtml
 
 # generated files
 *.log

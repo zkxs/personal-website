@@ -1,0 +1,203 @@
+﻿<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>HAL-9000 Port Summary</title>
+		<meta name="description" content="HAL-9000 Port Summary">
+		<meta name="keywords" content="port,listening,server,HAL-9000">
+		<meta name="author" content="Michael Ripley">
+		<meta charset="UTF-8">
+
+		<style type="text/css">
+			table,th,td
+			{
+				border:1px solid black;
+				border-collapse:collapse;
+				padding:5px;
+
+			}
+			
+			
+			/* Sortable tables */
+			table.sortable thead
+			{
+				background-color:#eee;
+				color:#666666;
+				font-weight: bold;
+				cursor: default;
+			}
+		</style>
+		
+		<script src="/js/sorttable.js"></script>
+		<!--[if lt IE 9]>
+			<script src="/js/html5shiv.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<a name="top"></a>
+		<p>
+			<a href="..">Parent Directory</a>
+		</p>
+
+		<table class="sortable">
+			<tr>
+				<th>Service</th>
+				<th>Port</th>
+				<th>Listening on</th>
+			</tr>
+
+			<!-- Insert table body here -->
+
+			<tr>
+				<td>Apache</td>
+				<td>80</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>nmbd</td>
+				<td>137</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>nmbd</td>
+				<td>138</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>samba</td>
+				<td>139</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>Apache (SSL)</td>
+				<td>443</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>samba</td>
+				<td>445</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>SSH</td>
+				<td>2222</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>mysql</td>
+				<td>3306</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>apcupsd</td>
+				<td>3551</td>
+				<td>localhost</td>
+			</tr>
+
+			<tr>
+				<td>Quassel</td>
+				<td>4242</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>Murmur ¿RPC?</td>
+				<td>6502</td>
+				<td>localhost</td>
+			</tr>
+
+			<tr>
+				<td>Apache (SSL)</td>
+				<td>7999</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>Apache</td>
+				<td>8080</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>motion webview</td>
+				<td>8081</td>
+				<td>localhost</td>
+			</tr>
+
+			<tr>
+				<td>motion webconf</td>
+				<td>8082</td>
+				<td>localhost</td>
+			</tr>
+
+			<tr>
+				<td>deluge webui</td>
+				<td>8112</td>
+				<td>localhost</td>
+			</tr>
+
+			<tr>
+				<td>btsync webui</td>
+				<td>8888</td>
+				<td>localhost</td>
+			</tr>
+
+			<tr>
+				<td>FTB</td>
+				<td>22222</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>Minecraft</td>
+				<td>25565</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>TF2</td>
+				<td>27015</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>btsync</td>
+				<td>27248</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>avahi</td>
+				<td>57012</td>
+				<td>*</td>
+			</tr>
+
+			<tr>
+				<td>deluged</td>
+				<td>58846</td>
+				<td>localhost</td>
+			</tr>
+
+			<tr>
+				<td>Murmur</td>
+				<td>64738</td>
+				<td>*</td>
+			</tr>
+
+			<!-- End of table body -->
+
+		</table>
+
+		<p>
+			<a href="#top">Go to top</a>
+		</p>
+		<!--#include virtual="/snippets/piwik.html" -->
+	</body>
+</html>
