@@ -5,7 +5,7 @@ AddDescription "TI Calculator files" calc
 AddDescription "A game about cells. Features an AI." CELLULAR_AUTOMATA.jar
 AddDescription "Random people who connected to my Minecraft server" ddos.txt
 AddDescription "Modifies the javascript screen variables to reduce browser fingerprintability" Fingerprint_Spoofer.user.js
-AddDescription "Attempts to resolve internet problems" fixinternet.bat
+AddDescription "You can't download this when you actually need it" fixinternet.bat
 AddDescription "Resets Windows' sound service" fixsound.bat
 AddDescription "Mods I've applied to my FTB server" FTB MichaelPatch.zip
 AddDescription "Games by me" games
