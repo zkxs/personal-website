@@ -1,7 +1,8 @@
 User-agent: *
-Host: zcraft.no-ip.org
+Host: michaelripley.net
 Disallow: /tmp/
 Disallow: /files/.minecrafthelp/
+Disallow: /files/private/
 Disallow: /post/
 Allow: /dynmap/index.html
 Disallow: /dynmap/

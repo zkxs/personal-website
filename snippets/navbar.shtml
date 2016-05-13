@@ -1,10 +1,10 @@
 <!-- begin suspicious empty space -->
 <!--#if expr="%{HTTPS} == 'on'" -->
 	<!--#set var="sshLinkText" value="Turn SSL off" -->
-	<!--#set var="sshLinkURL" value="http://zcraft.no-ip.org:8080${DOCUMENT_URI}" -->
+	<!--#set var="sshLinkURL" value="http://michaelripley.net:8080${DOCUMENT_URI}" -->
 <!--#else -->
 	<!--#set var="sshLinkText" value="Turn SSL on" -->
-	<!--#set var="sshLinkURL" value="https://zcraft.no-ip.org:7999${DOCUMENT_URI}" -->
+	<!--#set var="sshLinkURL" value="https://michaelripley.net:7999${DOCUMENT_URI}" -->
 <!--#endif -->
 
 <!--#if expr="%{DOCUMENT_URI} == '/html.shtml'" -->

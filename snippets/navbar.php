@@ -11,12 +11,12 @@
 					if ($https)
 					{
 						$text = "Turn SSL off";
-						$link = "http://zcraft.no-ip.org:8080" . $_SERVER['REQUEST_URI'];
+						$link = "http://michaelripley.net:8080" . $_SERVER['REQUEST_URI'];
 					}
 					else
 					{
 						$text = "Turn SSL on";
-						$link = "https://zcraft.no-ip.org:7999" . $_SERVER['REQUEST_URI'];
+						$link = "https://michaelripley.net:7999" . $_SERVER['REQUEST_URI'];
 					}
 ?>
 <nav class="sidebar">

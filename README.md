@@ -3,8 +3,7 @@ My personal website.  This is where I screw around with web stuff and host a bun
 
 ## Viewing it
 I've got a bunch of dynamic dns set up:
-* [zcraft.no-ip.org](http://zcraft.no-ip.org:8080)
-* [3545.no-ip.org](http://3545.no-ip.org:8080) ← *not sure why I keep this one*
+* [www.michaelripley.net](www.michaelripley.net)
 * [michael.evanforbes.net](http://michael.evanforbes.net:8080)
 
 ## Structure
