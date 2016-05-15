@@ -7,6 +7,7 @@
 		<meta name="author" content="Michael Ripley" />
 		<title>Snazzy Landing Page</title>
 		<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<link href="/js/lightbox/css/lightbox.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
 			<script src="/js/html5shiv.min.js"></script>
 		<![endif]-->
@@ -36,7 +37,11 @@
 						</li>
 						<li>Gaming
 							<ul>
-								<li><a href="mumble://mumble.michaelripley.net:64738/?version=1.2.0&title=Michael's%20Server">Mumble Voice Chat</a> (<a href="http://wiki.mumble.info/wiki/Main_Page">Get Mumble</a>)</li>
+								<li>
+									<a href="mumble://mumble.michaelripley.net:64738/?version=1.2.0&title=Michael's%20Server">Mumble Voice Chat</a>
+									(<a href="img/add_mumble_server.png" data-lightbox="mumblehelp" data-title="How to configure the Mumble server connection">Help getting connected</a>)
+									(<a href="http://wiki.mumble.info/wiki/Main_Page">Get Mumble</a>)
+								</li>
 								<li><a href="steam://connect/ark.michaelripley.net:27015">Ark: Survival Evolved Server</a></li>
 								<!--<li><a href="steam://connect/zkxs.no-ip.org:27016">Alternate Source Server</a></li>-->
 								<li><a href="steam://open/console">Steam Console</a></li>
@@ -47,6 +52,7 @@
 			</main>
 			<!--#include virtual="/snippets/footer.html" -->
 		</div>
+		<script src="/js/lightbox/js/lightbox-plus-jquery.min.js"></script>
 		<!--#include virtual="/snippets/piwik.html" -->
 	</body>
 </html>

@@ -18,6 +18,9 @@
 *secret.json
 *secrets.json
 
+# Libraries that I didn't make
+/js/lightbox
+
 # Hosted binary files
 /files/*
 !/files/.htaccess
