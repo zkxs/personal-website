@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="A collection of links I find useful to have easy access to within the steam overlay" />
+		<meta name="keywords" content="michael,ripley,steam,overlay,links" />
+		<meta name="author" content="Michael Ripley" />
+		<title>MichHome</title>
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<link href="/js/lightbox/css/lightbox.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="/js/html5shiv.min.js"></script>
+		<![endif]-->
+		<script type="text/javascript">
+			function setHome()
+			{
+				document.body.style.behavior='url(#default#homepage)';
+				document.body.setHomePage(window.location.href);
+			}
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<header><h1>Useful steam overlay links</h1></header>
+			<!--#include virtual="/snippets/navbar.shtml" -->
+			<main class="hasSideBar">
+				<nav>
+					<ul>
+						<li>Web
+							<ul>
+								<li><a href="https://www.google.com/">Google</a></li>
+								<li><a href="javascript:setHome()">Set this page as your home page (if your browser supports it)</a></li>
+							</ul>
+						</li>
+						<li>Steam
+							<ul>
+								<li><a href="steam://open/console">Steam Console</a></li>
+								<li><a href="http://steamcommunity.com/id/zkxs">Mich's profile</a></li>
+								<li><a href="https://steamid.io/lookup">Steam ID lookup</a></li>
+								<li><a href="http://steamid.co/">Another Steam ID lookup</a></li>
+							</ul>
+						</li>
+						<li><a href="https://warframe.com/signup?referrerId=55492840384632f1471ca56d">Warframe</a>
+							<ul>
+								<li><a href="http://warframe.market/">warframe.market</a> (Great trading site)</li>
+								<li><a href="https://docs.google.com/spreadsheets/d/10irnQYRLOnKRvs0q4JqTfhsJrYcls2FpHNrNTyB4-xY/edit">Michael's Bookkeeping</a> (private)</li>
+								<li><a href="https://docs.google.com/spreadsheets/d/1t-N6bTFWa7h914LsvJtSBitTwPystAtXPBFw0JX6ToY/edit#gid=0">Michael's Warframe Spreadsheet</a> (public)</li>
+								<li><a href="https://docs.google.com/spreadsheets/d/1dsj4QezZ_WfXP16NKVsUF3TINEEb3Dr0NhrOMI913HY/edit#gid=1667159658">Prime Drop List</a></li>
+								<li><a href="https://docs.google.com/spreadsheets/d/1DdsYLFaWL58_mQeKewm_ejCQdfXM7hSVx9o4PbZ-yD8/htmlview?usp=sharing&sle=true#">PVE Tier List</a></li>
+								<li><a href="http://www.tennodrops.com/">TennoDrops</a> (Where do I get that one part?)</li>
+								<li><a href="http://deathsnacks.com/wf/">Deathsnacks Alert Tracker</a></li>
+								<!--
+									This is now a broken link:
+									<li><a href="http://primarchguild.com/warframe-void-key-farming-guide/">Void Key Farming Locations</a></li>
+								-->
+								<li><a href="https://forums.warframe.com/">Forums</a>
+									<ul>
+										<li><a href="https://forums.warframe.com/index.php?/forum/2-news-announcements/?sort_key=start_date&sort_by=Z-A">News and Announcements</a></li>
+										<li><a href="https://forums.warframe.com/index.php?/forum/171-pc-beta-bugs/">Shitty Bug Forum</a></li>
+										<li><a href="https://forums.warframe.com/index.php?/topic/486215-prime-gear-drop-locations/">Prime Gear Drop Locations</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="http://warframe.wikia.com/wiki/WARFRAME_Wiki">Wiki</a>
+									<ul>
+										<li><a href="http://warframe.wikia.com/wiki/Resources">Resources</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Nav_Segment">Nav Segments</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Warframes">Warframes</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Warframes_Comparison">Warframe Comparison</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Mastery_Rank">Mastery Rank</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Prime">Primes</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Damage_2.0">Damage 2.0</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Void#Rewards">Void Rewards</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Mission">Mission Rewards</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Syndicate#Rank_5">Syndicates</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Quest">Quests</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Nightmare_Mode">Nightmare Mode</a></li>
+										<li><a href="http://warframe.wikia.com/wiki/Glossary">Glossary</a></li>
+									</ul>
+								</li>
+								<li><a href="http://steamcommunity.com/sharedfiles/filedetails/?id=259918295">A Beginners Guide to Warframe</a></li>
+								<li><a href="http://www.reddit.com/r/Warframe/comments/2l8jif/warframe_acronyms_lingo_and_community_specifics/">Community Jargon</a></li>
+								<li><a href="http://wftrading.net/">wftrading.net</a> (Just a price reference, used it back before <a href="http://warframe.market/">warframe.market</a> existed)</li>
+								<li><a href="http://i.imgur.com/9g6iIff.png" data-lightbox="wf-craft-chart" data-title="Warframe Crafting Chart">Warframe Crafting Chart</a></li>
+								<li>Key farming
+									<ul>
+										<li>
+											<table>
+												<tr>
+													<th>Location</th>
+													<th>Mission Type</th>
+													<th>Rewards</th>
+												</tr>
+												<tr>
+													<td>Hieracon, Pluto</td>
+													<td>DS Excavation</td>
+													<td>All T3 and T4 keys, R5 cores, Life Strike</td>
+												</tr>
+												<tr>
+													<td>Triton, Neptune</td>
+													<td>Corpus Excavation</td>
+													<td>All T2 and T3 keys, R5 cores</td>
+												</tr>
+												<tr>
+													<td>Zeugma, Phobos</td>
+													<td>DS Excavation</td>
+													<td>All T2 and T3 keys, Life Strike</td>
+												</tr>
+												<tr>
+													<td>Callisto, Jupiter</td>
+													<td>Corpus Interception</td>
+													<td>T4 non-endless keys</td>
+												</tr>
+												<tr>
+													<td>Draco, Ceres</td>
+													<td>Grineer Interception</td>
+													<td>T4 endless keys</td>
+												</tr>
+												<tr>
+													<td>Lua, Earth</td>
+													<td>Grineer Excavation</td>
+													<td>All T1 keys</td>
+												</tr>
+												<!--
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+												</tr>
+												-->
+											</table>
+										</li>
+									</ul>
+								</li>
+								<!--
+								<li><a href=""></a></li>
+								-->
+							</ul>
+						</li>
+						<li><a href="http://store.steampowered.com/app/407530">ARK</a>
+							<ul>
+								<li><a href="steam://connect/ark.michaelripley.net:27015/danno">The Server Itself</a></li>
+								<li><a href="ark_players.shtml">Current Players</a></li>
+								<li><a href="https://github.com/zkxs/ark-server-config">Server configuration options</a></li>
+								<li><a href="https://docs.google.com/spreadsheets/d/1JYYJH295ECH-SwGirzeRja3GSoGKGQDgFmuSIa4MNYg/pubhtml?widget=true&headers=false">Engram/XP modification</a></li>
+								<li><a href="http://ark.gamepedia.com/ARK:_Survival_Evolved_Wiki">Wiki</a> (ad-ridden piece of shit that kills Steam overlay browser's performance)
+									<ul>
+										<li><a href="http://ark.gamepedia.com/Patch_Notes">Patch Notes</a> (<a href="http://steamcommunity.com/app/346110/discussions/0/594820656447032287/">source</a>)</li>
+										<li><a href="http://ark.gamepedia.com/Dedicated_Server_Setup">Dedicated Server Setup</a></li>
+										<li><a href="http://ark.gamepedia.com/Server_Configuration">Server Configuration</a></li>
+										<li><a href="http://ark.gamepedia.com/Admin_Game_Commands">Console Commands</a></li>
+										<li><a href="http://ark.gamepedia.com/Entity_IDs">Entity IDs</a> (Ctrl+F this instead of using the wiki's shit search)</li>
+										<li><a href="http://ark.gamepedia.com/Item_Quality">Item Quality</a></li>
+										<li><a href="http://ark.gamepedia.com/Dino_Dossiers">Dino Dossiers</a></li>
+										<li><a href="http://ark.gamepedia.com/Saddle">Saddle</a></li>
+										<li><a href="http://ark.gamepedia.com/Beacons">Beacons</a></li>
+										<li><a href="http://ark.gamepedia.com/Deep_Sea_Loot_Crates">Deep Sea Loot Crates</a></li>
+										<li><a href="http://ark.gamepedia.com/Levels">Levels</a></li>
+										<li><a href="http://ark.gamepedia.com/The_Island">The Island (labeled map)</a></li>
+									</ul>
+								</li>
+								<li><a href="http://arkmap.org/">Zoomable map</a></li>
+								<li><a href="http://www.arkdb.info/">Slightly crappier zoomable map</a></li>
+								<li><a href="http://www.dopefish.de/archives/1052">RCON tool source code (for linux)</a></li>
+								<li>To reduce glare: <code>r.bloomquality 0</code> and <code>r.lightshafts 0</code></li>
+								<li>To disable shadows: <code>r.shadowquality 0</code></li>
+								<li>Show FPS counter: <code>stat fps</code></li>
+								<li>Improves FPS? <code>sg.EffectsQuality 0</code></li>
+							</ul>
+						</li>
+						<li>Music
+							<ul>
+								<li><a href="https://www.youtube.com/playlist?list=PLxj-gi0MSbT8zHiUVhqPIgsMYMuMld5Ex">Michael's Youtube playlist</a></li>
+								<li><a href="http://radd.it/r/chillstep/top/?sort=top&t=all">Best of /r/chillstep</a></li>
+								<li><a href="http://radd.it/r/listentothis/top/?sort=top&t=all">Best of /r/listentothis</a></li>
+								<li><a href="http://radd.it/r/Music?only=music&sort=top&t=all">Best of /r/music</a></li>
+								<!--
+									other subreddits to look at:
+									https://www.reddit.com/user/evilnight/m/chilled
+								-->
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</main>
+			<!--#include virtual="/snippets/footer.html" -->
+		</div>
+		<script src="/js/lightbox/js/lightbox-plus-jquery.min.js"></script>
+		<!--#include virtual="/snippets/piwik.html" -->
+	</body>
+</html>

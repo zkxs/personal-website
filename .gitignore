@@ -41,6 +41,7 @@
 !/tmp/secret.sh
 !/tmp/azenv.php
 !/tmp/ports.shtml
+!/tmp/steam.shtml
 
 # generated files
 *.log
