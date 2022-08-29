@@ -27,6 +27,7 @@
 /img/will/*.*
 /dl/files/*
 !/dl/files/.htaccess
+/artemis
 
 # /tmp is whitelist only
 /tmp/*

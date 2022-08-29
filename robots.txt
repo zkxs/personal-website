@@ -10,3 +10,4 @@ Disallow: /jpg/
 Disallow: /js/
 Disallow: /tf2/
 Disallow: /fastdownload/
+Disallow: /artemis/
